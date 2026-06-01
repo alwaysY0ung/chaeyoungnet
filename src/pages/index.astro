@@ -10,6 +10,7 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
     <meta name="viewport" content="width=device-width" />
     <title>Chaeyoung Lee</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet" />
     <style>
       * {
         margin: 0;
@@ -387,9 +388,98 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       @media (prefers-reduced-motion: reduce) {
         .cursor { animation: none; }
       }
+
+      /* intro: handwritten name, then reveal the site */
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #fdfdfd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        animation: intro-fade 0.7s ease 2.4s forwards;
+      }
+      .intro-name {
+        font-family: 'Parisienne', cursive;
+        font-size: clamp(2.8rem, 10vw, 6.5rem);
+        color: #0d0d0d;
+        white-space: nowrap;
+        padding: 0 0.12em 0.18em;
+        clip-path: inset(0 100% 0 0);
+        animation: sig-write 1.8s cubic-bezier(0.6, 0.05, 0.2, 1) 0.35s forwards;
+      }
+      @keyframes sig-write { to { clip-path: inset(0 -0.12em 0 0); } }
+      @keyframes intro-fade { to { opacity: 0; visibility: hidden; } }
+
+      /* floating dock bar (bottom-center) */
+      .dock {
+        --card-padding: 0.3rem;
+        --card-radius: 16px;
+        position: fixed;
+        left: 50%;
+        bottom: 1.5rem;
+        transform: translateX(-50%);
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        max-width: 36rem;
+        width: auto;
+        padding: var(--card-padding);
+        background: #0d0d0d;
+        border-radius: var(--card-radius);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      }
+      .dock-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.85rem;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.8rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .dock-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #34d399;
+        animation: dock-pulse 2s ease-out infinite;
+      }
+      @keyframes dock-pulse {
+        0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+        70% { box-shadow: 0 0 0 7px rgba(52, 211, 153, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+      }
+      .dock-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: calc(var(--card-radius) - var(--card-padding));
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.08);
+        transition: background 0.2s ease;
+      }
+      .dock-item:hover { background: rgba(255, 255, 255, 0.18); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .intro { animation: intro-fade 0.01s linear 0.2s forwards; }
+        .intro-name { animation: none; clip-path: none; }
+        .dock-dot { animation: none; }
+      }
     </style>
   </head>
   <body>
+    <div class="intro" id="intro" aria-hidden="true">
+      <span class="intro-name">Chaeyoung Lee</span>
+    </div>
     <div class="terminal-bg" aria-hidden="true">
       <div class="terminal-stream" id="termStream"></div>
     </div>
@@ -447,6 +537,10 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
           </div>
         </section>
       </main>
+    </div>
+    <div class="dock" aria-label="Status and links">
+      <span class="dock-label"><span class="dock-dot"></span>Security &amp; ML · SNSec-Lab</span>
+      <a class="dock-item" href="https://github.com/alwaysY0ung" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </div>
     <script>
       const stream = document.getElementById('termStream');
@@ -506,11 +600,16 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
           }
         }
 
-        if (reduce) {
-          seq.filter(([, t]) => t !== 'clear').forEach(([k, t]) => {
-            addLine(k === 'c').textContent = t;
-          });
-        } else {
+        let started = false;
+        function startTerminal() {
+          if (started) return;
+          started = true;
+          if (reduce) {
+            seq.filter(([, t]) => t !== 'clear').forEach(([k, t]) => {
+              addLine(k === 'c').textContent = t;
+            });
+            return;
+          }
           (async () => {
             for (;;) {
               for (const [k, t] of seq) {
@@ -521,6 +620,17 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
               await sleep(1200);
             }
           })();
+        }
+
+        // start typing only after the intro handwriting finishes
+        const intro = document.getElementById('intro');
+        if (reduce || !intro) {
+          startTerminal();
+        } else {
+          intro.addEventListener('animationend', (e) => {
+            if (e.animationName === 'intro-fade') startTerminal();
+          });
+          setTimeout(startTerminal, 3400);
         }
       }
     </script>
