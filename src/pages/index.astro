@@ -11,6 +11,9 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
     <title>Chaeyoung Lee</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet" />
+    <script is:inline>
+      try { if (sessionStorage.getItem('introSeen')) document.documentElement.classList.add('intro-seen'); } catch (e) {}
+    </script>
     <style>
       * {
         margin: 0;
@@ -412,6 +415,7 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       }
       @keyframes sig-write { to { clip-path: inset(0 -0.12em 0 0); } }
       @keyframes intro-fade { to { opacity: 0; visibility: hidden; } }
+      html.intro-seen .intro { display: none; }
 
       /* floating dock bar (bottom-center) */
       .dock {
@@ -624,9 +628,11 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
 
         // start typing only after the intro handwriting finishes
         const intro = document.getElementById('intro');
-        if (reduce || !intro) {
+        const introSeen = document.documentElement.classList.contains('intro-seen');
+        if (reduce || !intro || introSeen) {
           startTerminal();
         } else {
+          try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
           intro.addEventListener('animationend', (e) => {
             if (e.animationName === 'intro-fade') startTerminal();
           });
