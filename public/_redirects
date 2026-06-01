@@ -1,0 +1,2 @@
+# Canonical host: redirect www -> apex (chaeyoung.net)
+https://www.chaeyoung.net/* https://chaeyoung.net/:splat 301
