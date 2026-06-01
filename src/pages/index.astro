@@ -10,7 +10,6 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
     <meta name="viewport" content="width=device-width" />
     <title>Chaeyoung Lee</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet" />
     <script is:inline>
       try { if (sessionStorage.getItem('introSeen')) document.documentElement.classList.add('intro-seen'); } catch (e) {}
     </script>
@@ -392,7 +391,7 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         .cursor { animation: none; }
       }
 
-      /* intro: handwritten name, then reveal the site */
+      /* intro: handwritten signature (vara.js stroke animation), then reveal */
       .intro {
         position: fixed;
         inset: 0;
@@ -402,18 +401,10 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         align-items: center;
         justify-content: center;
         pointer-events: none;
-        animation: intro-fade 0.7s ease 2.4s forwards;
       }
-      .intro-name {
-        font-family: 'Parisienne', cursive;
-        font-size: clamp(2.8rem, 10vw, 6.5rem);
-        color: #0d0d0d;
-        white-space: nowrap;
-        padding: 0 0.12em 0.18em;
-        clip-path: inset(0 100% 0 0);
-        animation: sig-write 1.8s cubic-bezier(0.6, 0.05, 0.2, 1) 0.35s forwards;
-      }
-      @keyframes sig-write { to { clip-path: inset(0 -0.12em 0 0); } }
+      .intro-vara { width: min(90vw, 820px); }
+      .intro-vara svg { max-width: 100%; height: auto; overflow: visible; }
+      .intro--out { animation: intro-fade 0.7s ease forwards; }
       @keyframes intro-fade { to { opacity: 0; visibility: hidden; } }
       html.intro-seen .intro { display: none; }
 
@@ -474,15 +465,13 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       .dock-item:hover { background: rgba(255, 255, 255, 0.18); }
 
       @media (prefers-reduced-motion: reduce) {
-        .intro { animation: intro-fade 0.01s linear 0.2s forwards; }
-        .intro-name { animation: none; clip-path: none; }
         .dock-dot { animation: none; }
       }
     </style>
   </head>
   <body>
     <div class="intro" id="intro" aria-hidden="true">
-      <span class="intro-name">Chaeyoung Lee</span>
+      <div id="introVara" class="intro-vara"></div>
     </div>
     <div class="terminal-bg" aria-hidden="true">
       <div class="terminal-stream" id="termStream"></div>
@@ -546,6 +535,7 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       <span class="dock-label"><span class="dock-dot"></span>Security &amp; ML · SNSec-Lab</span>
       <a class="dock-item" href="https://github.com/alwaysY0ung" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </div>
+    <script is:inline src="https://cdn.jsdelivr.net/npm/vara@1.4.1/src/vara.min.js"></script>
     <script>
       const stream = document.getElementById('termStream');
       if (stream) {
@@ -629,14 +619,47 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         // start typing only after the intro handwriting finishes
         const intro = document.getElementById('intro');
         const introSeen = document.documentElement.classList.contains('intro-seen');
+
+        function finishIntro() {
+          if (intro) {
+            intro.addEventListener('animationend', () => intro.remove(), { once: true });
+            intro.classList.add('intro--out');
+          }
+          startTerminal();
+        }
+
         if (reduce || !intro || introSeen) {
+          if (intro) intro.remove();
           startTerminal();
         } else {
           try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
-          intro.addEventListener('animationend', (e) => {
-            if (e.animationName === 'intro-fade') startTerminal();
-          });
-          setTimeout(startTerminal, 3400);
+          const el = document.getElementById('introVara');
+          let finished = false;
+          const done = () => { if (finished) return; finished = true; finishIntro(); };
+          if (typeof Vara !== 'undefined' && el) {
+            try {
+              const v = new Vara(
+                '#introVara',
+                'https://cdn.jsdelivr.net/gh/akzhy/vara@master/fonts/Satisfy/SatisfySL.json',
+                [{ text: 'Chaeyoung Lee' }],
+                {
+                  fontSize: Math.min(76, Math.round(window.innerWidth / 9)),
+                  strokeWidth: 1.8,
+                  color: '#0d0d0d',
+                  duration: 2400,
+                  textAlign: 'center',
+                }
+              );
+              v.animationEnd(() => setTimeout(done, 650));
+              setTimeout(done, 6000); // safety net if CDN/animation stalls
+            } catch (e) {
+              intro.remove();
+              startTerminal();
+            }
+          } else {
+            intro.remove();
+            startTerminal();
+          }
         }
       }
     </script>
