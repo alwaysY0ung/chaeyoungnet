@@ -12,6 +12,25 @@
     <title>Value - Chaeyoung Lee</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
+      .cmdk-trigger {
+        position: fixed; bottom: 1.5rem; right: 5.1rem; z-index: 60;
+        width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 50%; border: 1px solid rgba(var(--fg-rgb), 0.14);
+        background: var(--bg); color: var(--fg); cursor: pointer;
+        box-shadow: 0 6px 20px rgba(var(--fg-rgb), 0.12);
+        transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+      }
+      .cmdk-trigger:hover { transform: translateY(-2px); }
+      .cmdk-trigger svg { width: 18px; height: 18px; }
+      .cmdk { position: fixed; inset: 0; z-index: 200; display: none; align-items: flex-start; justify-content: center; background: rgba(0, 0, 0, 0.45); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); padding-top: 15vh; }
+      .cmdk.open { display: flex; }
+      .cmdk-panel { width: min(520px, 92vw); background: var(--bg); border: 1px solid rgba(var(--fg-rgb), 0.12); border-radius: 14px; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35); overflow: hidden; }
+      .cmdk-input { width: 100%; box-sizing: border-box; border: none; outline: none; background: transparent; color: var(--fg); font-size: 1rem; font-family: inherit; padding: 1rem 1.1rem; border-bottom: 1px solid rgba(var(--fg-rgb), 0.08); }
+      .cmdk-list { list-style: none; margin: 0; padding: 0.4rem; max-height: 320px; overflow-y: auto; }
+      .cmdk-item { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.65rem 0.8rem; border-radius: 9px; cursor: pointer; font-size: 0.9rem; color: var(--fg); }
+      .cmdk-item[aria-selected="true"] { background: rgba(var(--fg-rgb), 0.08); }
+      .cmdk-item .hint { font-size: 0.72rem; color: var(--muted); }
+      .cmdk-empty { padding: 0.9rem; color: var(--muted); font-size: 0.85rem; text-align: center; }
       :root {
         --bg: #fdfdfd; --bg-rgb: 253, 253, 253;
         --fg: #0d0d0d; --fg-rgb: 13, 13, 13;
@@ -145,6 +164,87 @@
           var dark = document.documentElement.classList.toggle('dark');
           try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
         });
+      })();
+    </script>
+    <button class="cmdk-trigger" id="cmdkTrigger" type="button" aria-label="Search (Cmd/Ctrl + K)" title="Search (⌘K)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </button>
+    <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Command palette">
+      <div class="cmdk-panel">
+        <input class="cmdk-input" type="text" placeholder="Search pages…  (⌘K)" autocomplete="off" spellcheck="false" aria-label="Search" />
+        <ul class="cmdk-list" role="listbox"></ul>
+      </div>
+    </div>
+    <script is:inline>
+      (function () {
+        var trigger = document.getElementById('cmdkTrigger');
+        var overlay = document.getElementById('cmdk');
+        if (!overlay) return;
+        var input = overlay.querySelector('.cmdk-input');
+        var list = overlay.querySelector('.cmdk-list');
+        var items = [
+          { label: 'Home', href: '/', hint: 'home' },
+          { label: 'Product', href: '/product' },
+          { label: 'Value', href: '/value' },
+          { label: 'Stories', href: '/stories' },
+          { label: 'GitHub', href: 'https://github.com/alwaysY0ung', hint: '↗', ext: true },
+          { label: 'Toggle theme', action: 'theme', hint: '☾ / ☀' },
+        ];
+        var filtered = items.slice(), sel = 0;
+        function render() {
+          var q = input.value.trim().toLowerCase();
+          filtered = items.filter(function (it) { return it.label.toLowerCase().indexOf(q) > -1; });
+          if (sel >= filtered.length) sel = filtered.length - 1;
+          if (sel < 0) sel = 0;
+          list.innerHTML = '';
+          if (!filtered.length) {
+            var e = document.createElement('li');
+            e.className = 'cmdk-empty';
+            e.textContent = 'No results';
+            list.appendChild(e);
+            return;
+          }
+          filtered.forEach(function (it, i) {
+            var li = document.createElement('li');
+            li.className = 'cmdk-item';
+            li.setAttribute('role', 'option');
+            li.setAttribute('aria-selected', i === sel ? 'true' : 'false');
+            var a = document.createElement('span'); a.textContent = it.label; li.appendChild(a);
+            if (it.hint) { var h = document.createElement('span'); h.className = 'hint'; h.textContent = it.hint; li.appendChild(h); }
+            li.addEventListener('click', function () { run(it); });
+            li.addEventListener('mousemove', function () { sel = i; mark(); });
+            list.appendChild(li);
+          });
+        }
+        function mark() {
+          var lis = list.querySelectorAll('.cmdk-item');
+          for (var i = 0; i < lis.length; i++) lis[i].setAttribute('aria-selected', i === sel ? 'true' : 'false');
+          if (lis[sel]) lis[sel].scrollIntoView({ block: 'nearest' });
+        }
+        function run(it) {
+          if (!it) return;
+          if (it.action === 'theme') {
+            var dark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+            close();
+            return;
+          }
+          if (it.ext) { window.open(it.href, '_blank', 'noopener'); close(); return; }
+          window.location.href = it.href;
+        }
+        function open() { overlay.classList.add('open'); input.value = ''; sel = 0; render(); setTimeout(function () { input.focus(); }, 0); }
+        function close() { overlay.classList.remove('open'); }
+        if (trigger) trigger.addEventListener('click', open);
+        document.addEventListener('keydown', function (e) {
+          if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); overlay.classList.contains('open') ? close() : open(); return; }
+          if (!overlay.classList.contains('open')) return;
+          if (e.key === 'Escape') { close(); }
+          else if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); mark(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); mark(); }
+          else if (e.key === 'Enter') { e.preventDefault(); run(filtered[sel]); }
+        });
+        input.addEventListener('input', function () { sel = 0; render(); });
+        overlay.addEventListener('mousedown', function (e) { if (e.target === overlay) close(); });
       })();
     </script>
   </body>
