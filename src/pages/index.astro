@@ -402,8 +402,8 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         justify-content: center;
         pointer-events: none;
       }
-      .intro-vara { width: min(90vw, 820px); }
-      .intro-vara svg { max-width: 100%; height: auto; overflow: visible; }
+      .intro-vara { width: min(90vw, 820px); padding-top: 0.4em; }
+      .intro-vara svg { max-width: 100%; height: auto; overflow: visible !important; }
       .intro--out { animation: intro-fade 0.7s ease forwards; }
       @keyframes intro-fade { to { opacity: 0; visibility: hidden; } }
       html.intro-seen .intro { display: none; }
@@ -640,13 +640,13 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
             try {
               const v = new Vara(
                 '#introVara',
-                'https://cdn.jsdelivr.net/gh/akzhy/vara@master/fonts/Satisfy/SatisfySL.json',
+                'https://cdn.jsdelivr.net/gh/akzhy/vara@master/fonts/Parisienne/Parisienne.json',
                 [{ text: 'Chaeyoung Lee' }],
                 {
-                  fontSize: Math.min(76, Math.round(window.innerWidth / 9)),
-                  strokeWidth: 1.8,
+                  fontSize: Math.min(78, Math.round(window.innerWidth / 9)),
+                  strokeWidth: 1.6,
                   color: '#0d0d0d',
-                  duration: 2400,
+                  duration: 1500,
                   textAlign: 'center',
                 }
               );
