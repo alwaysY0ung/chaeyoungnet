@@ -17,9 +17,13 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         box-sizing: border-box;
       }
 
+      html {
+        background-color: #fdfdfd;
+      }
+
       body {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        background-color: #fdfdfd;
+        background-color: transparent;
         color: #0d0d0d;
         line-height: 1.5;
       }
@@ -342,9 +346,52 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         max-width: 100%;
         object-fit: contain;
       }
+      /* terminal background (tone-on-tone with #fdfdfd) */
+      .terminal-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+        user-select: none;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 66%, transparent 100%);
+                mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 66%, transparent 100%);
+      }
+
+      .terminal-stream {
+        position: absolute;
+        left: 2.5rem;
+        right: 2.5rem;
+        bottom: 2.25rem;
+        font-family: ui-monospace, 'SF Mono', 'Menlo', 'Consolas', monospace;
+        font-size: 0.82rem;
+        line-height: 1.75;
+        color: rgba(13, 13, 13, 0.085);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .term-line { min-height: 1.75em; }
+      .term-prompt { color: rgba(13, 13, 13, 0.16); }
+
+      .cursor {
+        display: inline-block;
+        width: 0.6ch;
+        background: rgba(13, 13, 13, 0.18);
+        animation: term-blink 1.05s steps(1) infinite;
+      }
+
+      @keyframes term-blink { 50% { opacity: 0; } }
+
+      @media (prefers-reduced-motion: reduce) {
+        .cursor { animation: none; }
+      }
     </style>
   </head>
   <body>
+    <div class="terminal-bg" aria-hidden="true">
+      <div class="terminal-stream" id="termStream"></div>
+    </div>
     <div class="container">
       <header>
         <nav>
@@ -400,5 +447,81 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         </section>
       </main>
     </div>
+    <script>
+      const stream = document.getElementById('termStream');
+      if (stream) {
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const PROMPT = 'chaeyoung@snsec:~$ ';
+        const MAX = 40;
+        const seq = [
+          ['c', 'whoami'],
+          ['o', 'chaeyoung — security & ML · SNSec Lab'],
+          ['c', 'python train.py --model transformer --epochs 50'],
+          ['o', '[init] device=cuda:0  seed=42'],
+          ['o', '[data] 128k samples  train/val = 0.9/0.1'],
+          ['o', 'epoch 01/50  loss 2.4137  val 2.1090  lr 3e-4'],
+          ['o', 'epoch 02/50  loss 1.9802  val 1.8553'],
+          ['o', 'epoch 03/50  loss 1.7421  val 1.6890'],
+          ['o', 'epoch 04/50  loss 1.5908  val 1.5402  (best)'],
+          ['c', 'nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader'],
+          ['o', '94 %'],
+          ['c', 'git commit -am "ship it" && git push origin main'],
+          ['o', 'To github.com:alwaysY0ung/chaeyoungnet.git'],
+          ['o', '   main -> main'],
+          ['c', 'curl -sI https://chaeyoung.net | head -1'],
+          ['o', 'HTTP/2 200'],
+          ['c', 'clear'],
+        ];
+
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        cursor.textContent = ' ';
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+        const trim = () => { while (stream.children.length > MAX) stream.removeChild(stream.firstChild); };
+
+        function addLine(isCmd) {
+          const el = document.createElement('div');
+          el.className = 'term-line';
+          if (isCmd) {
+            const p = document.createElement('span');
+            p.className = 'term-prompt';
+            p.textContent = PROMPT;
+            el.appendChild(p);
+          }
+          const span = document.createElement('span');
+          el.appendChild(span);
+          stream.appendChild(el);
+          trim();
+          return span;
+        }
+
+        async function typeLine(text, isCmd) {
+          const span = addLine(isCmd);
+          span.parentNode.appendChild(cursor);
+          const base = isCmd ? 42 : 5;
+          for (let i = 0; i < text.length; i++) {
+            span.textContent += text[i];
+            await sleep(base + Math.random() * (isCmd ? 55 : 7));
+          }
+        }
+
+        if (reduce) {
+          seq.filter(([, t]) => t !== 'clear').forEach(([k, t]) => {
+            addLine(k === 'c').textContent = t;
+          });
+        } else {
+          (async () => {
+            for (;;) {
+              for (const [k, t] of seq) {
+                await typeLine(t, k === 'c');
+                await sleep(k === 'c' ? 480 : 110);
+                if (t === 'clear') { await sleep(260); stream.innerHTML = ''; }
+              }
+              await sleep(1200);
+            }
+          })();
+        }
+      }
+    </script>
   </body>
 </html>
