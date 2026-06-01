@@ -43,3 +43,7 @@ lerna-debug.log*
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# Large source images kept local only (not used on the site)
+src/assets/images/260322_1557_CYL.jpg
+src/assets/images/260322_1557_CYL_crop.jpg
