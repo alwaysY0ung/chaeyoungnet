@@ -104,9 +104,9 @@ const latestPosts = [];
       }
       .theme-toggle {
         width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
-        border-radius: 50%; border: 1px solid rgba(var(--fg-rgb), 0.14);
-        background: var(--bg); color: var(--fg); cursor: pointer;
-        box-shadow: 0 6px 20px rgba(var(--fg-rgb), 0.12);
+        border-radius: 50%; border: 1px solid transparent;
+        background: var(--fg); color: var(--bg); cursor: pointer;
+        box-shadow: 0 6px 20px rgba(var(--fg-rgb), 0.18);
         transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
       }
       .theme-toggle:hover { transform: translateY(-2px); }
@@ -139,7 +139,10 @@ const latestPosts = [];
       }
 
       header {
-        padding: 2rem 0;
+        padding: 1.5rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
 
       nav {
@@ -279,7 +282,8 @@ const latestPosts = [];
       .nav-k {
         background: transparent;
         border: 1px solid rgba(var(--fg-rgb), 0.18);
-        color: rgba(var(--fg-rgb), 0.38);
+        color: var(--fg);
+        opacity: 0.82;
         font-family: inherit;
         font-size: 0.7rem;
         letter-spacing: 0.02em;
@@ -293,7 +297,7 @@ const latestPosts = [];
         line-height: 1;
         transition: background 0.2s ease, color 0.2s ease;
       }
-      .nav-k:hover { background: rgba(var(--fg-rgb), 0.10); color: rgba(var(--fg-rgb), 0.6); }
+      .nav-k:hover { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
       .nav-k-ico { font-size: 0.72rem; opacity: 0.75; }
 
       .nav-burger {
@@ -1392,6 +1396,28 @@ const latestPosts = [];
             applyLang(o.dataset.lang);
           });
         });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        var term = document.querySelector('.terminal-bg');
+        var kra = document.querySelector('.home-sec'); // first section = Key Research Areas
+        if (!term || !kra) return;
+        var ticking = false;
+        function update() {
+          ticking = false;
+          var vh = window.innerHeight || document.documentElement.clientHeight;
+          var top = kra.getBoundingClientRect().top;
+          // fully visible until KRA top reaches 70% of the viewport,
+          // fully hidden by the time it reaches 30% — reverses on scroll up.
+          var o = (top - vh * 0.3) / (vh * 0.4);
+          o = Math.max(0, Math.min(1, o));
+          term.style.opacity = o;
+        }
+        function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        update();
       })();
     </script>
   </body>
