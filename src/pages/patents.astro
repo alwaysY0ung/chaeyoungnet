@@ -1,13 +1,13 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import BibList from '../components/BibList.astro';
+import PubCards from '../components/PubCards.astro';
 import { patents } from '../data/research.js';
 ---
 <SiteLayout title="Patents · Chaeyoung Lee" active="patents">
   <section class="page-wrap">
     <h1 class="page-h1 reveal" data-en="Patents" data-ko="특허">Patents</h1>
     <div class="reveal">
-      <BibList items={patents} />
+      <PubCards items={patents} />
     </div>
   </section>
 </SiteLayout>

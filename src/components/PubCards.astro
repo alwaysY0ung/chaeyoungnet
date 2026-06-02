@@ -1,0 +1,85 @@
+---
+// Nikola-style card grid for publications / datasets / patents,
+// but each card carries proper bibliographic content:
+//   thumbnail → title → authors (with ORCID iD icons, * for equal
+//   contribution) → venue, year · note → optional link.
+// (Whole-card link avoided so author iD <a>s don't nest inside an <a>.)
+const { items = [] } = Astro.props;
+const hasEq = items.some((it) => (it.authors || []).some((a) => a.eq));
+const ORCID_SVG =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg>';
+---
+<div class="pub-grid">
+  {items.map((it, i) => {
+    const ext = it.href && it.href.startsWith('http');
+    const thumbStyle = `--h:${(i * 53 + 28) % 360}`;
+    return (
+      <article class="pub-card reveal">
+        {it.href ? (
+          <a class="pub-thumb" href={it.href} style={thumbStyle} {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})} aria-label={it.title}>
+            {it.img && <img src={it.img} alt={it.title} loading="lazy" />}
+          </a>
+        ) : (
+          <div class="pub-thumb" style={thumbStyle}>
+            {it.img && <img src={it.img} alt={it.title} loading="lazy" />}
+          </div>
+        )}
+        <h3 class="pub-title">{it.title}</h3>
+        <p class="pub-authors">
+          {it.authors.map((a, j) => (
+            <>
+              <span class="pub-author"
+                >{a.name}{a.eq && <sup class="bib-eq">*</sup>}{a.orcid ? (
+                  <a class="bib-id" href={a.orcid} target="_blank" rel="noopener noreferrer" aria-label={`${a.name} — ORCID`} set:html={ORCID_SVG} />
+                ) : (
+                  <span class="bib-id bib-id--none" title="ORCID not listed" aria-hidden="true" set:html={ORCID_SVG} />
+                )}</span
+              >{j < it.authors.length - 1 ? <span>, </span> : ''}
+            </>
+          ))}
+        </p>
+        <p class="pub-meta"><span class="pub-venue">{it.venue}</span>{it.year ? `, ${it.year}` : ''}{it.note ? ` · ${it.note}` : ''}</p>
+        {it.href && (
+          <a class="pub-link" href={it.href} {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{ext ? 'Visit ↗' : 'Details →'}</a>
+        )}
+      </article>
+    );
+  })}
+</div>
+{hasEq && <p class="bib-foot" data-en="* Equal contribution" data-ko="* 공동 기여">* Equal contribution</p>}
+
+<style>
+  /* cols-1 · lg(1024):2 · xl(1280):3 — gap-16 mobile, sm(640):gap-8 */
+  .pub-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; max-width: 980px; }
+  @media (min-width: 640px) { .pub-grid { gap: 2rem; } }
+  @media (min-width: 1024px) { .pub-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1280px) { .pub-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .pub-card { display: flex; flex-direction: column; }
+  .pub-thumb {
+    display: block;
+    aspect-ratio: 3 / 4;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.1rem;
+    background: linear-gradient(150deg, hsl(var(--h) 30% 90%) 0%, hsl(calc(var(--h) + 35) 28% 80%) 100%);
+    box-shadow: 0 2px 10px rgba(var(--fg-rgb), 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  html.dark .pub-thumb { background: linear-gradient(150deg, hsl(var(--h) 16% 24%) 0%, hsl(calc(var(--h) + 35) 18% 17%) 100%); }
+  .pub-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  a.pub-thumb:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(var(--fg-rgb), 0.16); }
+
+  .pub-title { font-size: 1.08rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+  .pub-authors { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0.3rem; }
+  .pub-author { white-space: nowrap; }
+  .bib-eq { color: var(--muted); font-weight: 600; }
+  .bib-id { display: inline-flex; align-items: center; vertical-align: middle; margin: 0 0.1rem 0 0.16rem; }
+  .bib-id svg { width: 0.9em; height: 0.9em; fill: #a6ce39; display: block; }
+  .bib-id--none svg { fill: rgba(var(--fg-rgb), 0.25); }
+  .pub-meta { font-size: 0.86rem; color: var(--muted); }
+  .pub-venue { font-style: italic; }
+  .pub-link { margin-top: 0.7rem; font-size: 0.84rem; font-weight: 600; color: var(--fg); opacity: 0.78; text-decoration: none; }
+  .pub-link:hover { opacity: 1; }
+  .bib-foot { margin-top: 1.4rem; font-size: 0.82rem; color: var(--muted); }
+</style>
