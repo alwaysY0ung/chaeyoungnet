@@ -1,0 +1,13 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import BibList from '../components/BibList.astro';
+import { datasets } from '../data/research.js';
+---
+<SiteLayout title="Datasets · Chaeyoung Lee" active="datasets">
+  <section class="page-wrap">
+    <h1 class="page-h1 reveal" data-en="Datasets" data-ko="데이터셋">Datasets</h1>
+    <div class="reveal">
+      <BibList items={datasets} />
+    </div>
+  </section>
+</SiteLayout>

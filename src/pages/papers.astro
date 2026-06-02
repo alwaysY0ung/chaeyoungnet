@@ -1,0 +1,13 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import BibList from '../components/BibList.astro';
+import { papers } from '../data/research.js';
+---
+<SiteLayout title="Papers · Chaeyoung Lee" active="papers">
+  <section class="page-wrap">
+    <h1 class="page-h1 reveal" data-en="Papers" data-ko="논문">Papers</h1>
+    <div class="reveal">
+      <BibList items={papers} />
+    </div>
+  </section>
+</SiteLayout>

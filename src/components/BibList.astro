@@ -1,0 +1,53 @@
+---
+// Bibliographic list (lab-site style):
+//   Author¹ iD, Author² iD, … : Title. Venue, Year  note: …  [link]
+// An ORCID iD icon is shown after every author name (linked when the
+// author's ORCID is known). `eq` authors get a "*" with a footnote.
+const { items = [] } = Astro.props;
+const hasEq = items.some((it) => (it.authors || []).some((a) => a.eq));
+const ORCID_SVG =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg>';
+---
+<ol class="bib-list">
+  {items.map((it) => (
+    <li class="bib">
+      <span class="bib-authors">
+        {it.authors.map((a, i) => (
+          <>
+            <span class="bib-author"
+              >{a.name}{a.eq && <sup class="bib-eq">*</sup>}{a.orcid ? (
+                <a class="bib-id" href={a.orcid} target="_blank" rel="noopener noreferrer" aria-label={`${a.name} — ORCID`} set:html={ORCID_SVG} />
+              ) : (
+                <span class="bib-id bib-id--none" title="ORCID not listed" aria-hidden="true" set:html={ORCID_SVG} />
+              )}</span
+            >{i < it.authors.length - 1 ? <span class="bib-comma">, </span> : <span class="bib-colon">: </span>}
+          </>
+        ))}
+      </span>
+      <span class="bib-title">{it.title}</span>. <span class="bib-venue">{it.venue}</span>{it.year ? `, ${it.year}` : ''}
+      {it.note && <span class="bib-note"> &middot; {it.note}</span>}
+      {it.href && (
+        <a class="bib-href" href={it.href} target="_blank" rel="noopener noreferrer">↗</a>
+      )}
+    </li>
+  ))}
+</ol>
+{hasEq && <p class="bib-foot" data-en="* Equal contribution" data-ko="* 공동 기여">* Equal contribution</p>}
+
+<style>
+  .bib-list { list-style: none; margin: 0; padding: 0; max-width: 820px; }
+  .bib { padding: 1rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); line-height: 1.7; font-size: 1rem; }
+  .bib:first-child { padding-top: 0; }
+  .bib:last-child { border-bottom: none; }
+  .bib-author { white-space: nowrap; }
+  .bib-eq { color: var(--muted); font-weight: 600; }
+  .bib-id { display: inline-flex; align-items: center; vertical-align: middle; margin: 0 0.1rem 0 0.18rem; }
+  .bib-id svg { width: 0.95em; height: 0.95em; fill: #a6ce39; display: block; }
+  .bib-id--none svg { fill: rgba(var(--fg-rgb), 0.25); }
+  .bib-title { font-weight: 700; letter-spacing: -0.01em; }
+  .bib-venue { color: var(--muted); font-style: italic; }
+  .bib-note { color: var(--muted); }
+  .bib-href { margin-left: 0.35rem; text-decoration: none; color: var(--muted); font-weight: 700; }
+  .bib-href:hover { color: var(--fg); }
+  .bib-foot { margin-top: 0.9rem; font-size: 0.82rem; color: var(--muted); }
+</style>
