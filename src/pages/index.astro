@@ -1,6 +1,47 @@
 ---
 import { Image } from 'astro:assets';
-import selfie from '../assets/images/260418_selfie_CYL.jpg';
+import selfie from '../assets/images/260322_1557_CYL-Photoroom.png';
+import BibList from '../components/BibList.astro';
+import { selectedPublications } from '../data/research.js';
+
+// Social / contact links (single source for the dock bar + contact popover).
+// TODO: scholar / orcid / linkedin 의 url 을 실제 프로필 주소로 채우면
+// 하단 바 아이콘과 Contact 팝오버에서 바로 클릭됩니다.
+const socials = [
+  { key: 'github', label: 'GitHub', url: 'https://github.com/alwaysY0ung' },
+  { key: 'scholar', label: 'Google Scholar', url: 'https://scholar.google.com/citations?user=O9-EG6oAAAAJ' },
+  { key: 'orcid', label: 'ORCID', url: 'https://orcid.org/0009-0006-8907-6504' },
+  { key: 'linkedin', label: 'LinkedIn', url: 'https://www.linkedin.com/in/chaeyoung-lee-bb934b34a/' },
+];
+const ICONS = {
+  github:
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
+  scholar:
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>',
+  orcid:
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg>',
+  linkedin:
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+};
+
+// ── Home section content (snsec-style layout, but MY OWN content only). ──
+// 빈 배열([])인 섹션은 자동으로 숨겨집니다. 항목을 추가하면 다시 나타납니다.
+// 본문은 영어 전용. 섹션 라벨만 data-en/data-ko 로 번역됩니다.
+const researchAreas = [
+  { title: 'Core Tech', desc: 'Deep Learning, NLP' },
+  { title: 'Security', desc: 'Data-driven Security, Intrusion Detection' },
+  { title: 'Safety & Trust', desc: 'Adversarial Machine Learning, Automotive Security' },
+  { title: 'Emerging Interests', desc: 'Data Poisoning, Machine Unlearning' },
+];
+// TODO: 본인이 실제로 참여 중인 협업만 추가하세요. (예: { title: '...', with: 'with ...' })
+const collaborations = [];
+// TODO: 본인 소식만 추가하세요.
+const news = [
+  { date: 'Apr 27, 2026', text: 'Our paper “DRIFT: Drift-Resilient Invariant-Feature Transformer for DGA Detection” (Chaeyoung Lee and Chaeri Jung, equal contribution) was accepted to IEEE/IFIP DSN’26.' },
+];
+// TODO: 블로그 글이 생기면 /blog 와 함께 갱신하세요.
+const latestPosts = [];
+// selectedPublications is imported from ../data/research.js (shared with /papers).
 ---
 
 <!DOCTYPE html>
@@ -40,18 +81,28 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         --bg: #fdfdfd; --bg-rgb: 253, 253, 253;
         --fg: #0d0d0d; --fg-rgb: 13, 13, 13;
         --surface: #f0f0f0; --muted: #555; --accent-hover: #262626;
+        --photo-bg: #f2f1ef;
         color-scheme: light;
       }
       html.dark {
         --bg: #0e0e10; --bg-rgb: 14, 14, 16;
         --fg: #f1f1f1; --fg-rgb: 241, 241, 241;
         --surface: #1c1c20; --muted: #9a9a9a; --accent-hover: #dcdcdc;
+        --photo-bg: #18181c;
         color-scheme: dark;
       }
       html { background-color: var(--bg); }
       body { transition: background-color 0.25s ease, color 0.25s ease; }
+      .top-right {
+        position: fixed;
+        top: 1.6rem;
+        right: 2.5rem;
+        z-index: 70;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.9rem;
+      }
       .theme-toggle {
-        position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 60;
         width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
         border-radius: 50%; border: 1px solid rgba(var(--fg-rgb), 0.14);
         background: var(--bg); color: var(--fg); cursor: pointer;
@@ -98,14 +149,15 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       }
 
       .nav-container {
+        position: relative;
         display: inline-flex;
         align-items: center;
-        gap: 2.5rem;
+        gap: 1.25rem;
         background: rgba(var(--bg-rgb), 0.8);
         backdrop-filter: blur(10px);
         padding: 0.6rem 1.5rem;
         border-radius: 50px;
-        border: 1px solid rgba(var(--fg-rgb), 0.05);
+        border: 1px solid rgba(var(--fg-rgb), 0.14);
       }
 
       .logo {
@@ -117,41 +169,47 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       }
 
       .logo-icon {
-        width: 26px;
         height: 26px;
+        padding: 0 0.5rem;
         background: var(--fg);
-        border-radius: 50%;
+        border-radius: 7px;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
       .logo-icon::before {
-        content: 'G';
+        content: 'ChaeyoungLee';
         color: var(--bg);
         font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.82rem;
+        letter-spacing: 0.02em;
       }
 
       .nav-links {
         display: flex;
-        gap: 1.8rem;
+        gap: 0.5rem;
         align-items: center;
       }
 
       .nav-links a {
         text-decoration: none;
         color: var(--fg);
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 500;
-        opacity: 0.85;
-        padding: 0.4rem 0.8rem;
+        opacity: 0.82;
+        padding: 0.38rem 0.6rem;
         border-radius: 8px;
         transition: all 0.2s ease;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
       }
 
       .nav-links a:hover {
-        background: rgba(var(--fg-rgb), 0.05);
+        background: rgba(var(--fg-rgb), 0.10);
+        opacity: 1;
       }
 
       .nav-links a.active {
@@ -159,6 +217,132 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         color: var(--bg);
         opacity: 1;
         box-shadow: 0 4px 12px rgba(var(--fg-rgb), 0.2);
+      }
+
+      /* snsec-style nav: publications dropdown */
+      .nav-group { position: relative; }
+      .nav-group::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: 0.6rem;
+      }
+      .nav-group-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--fg);
+        font-family: inherit;
+        font-size: 0.82rem;
+        font-weight: 500;
+        opacity: 0.82;
+        padding: 0.38rem 0.6rem;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        white-space: nowrap;
+        line-height: 1;
+        transition: background 0.2s ease, opacity 0.2s ease;
+      }
+      .nav-group:hover .nav-group-btn { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
+      .nav-group-menu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0.5rem;
+        background: var(--bg);
+        border: 1px solid rgba(var(--fg-rgb), 0.08);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(var(--fg-rgb), 0.12);
+        padding: 0.4rem;
+        min-width: 140px;
+        display: none;
+        z-index: 100;
+      }
+      .nav-group:hover .nav-group-menu { display: block; }
+      .nav-group-menu a {
+        display: block;
+        padding: 0.5rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        opacity: 0.9;
+      }
+      .nav-group-menu a:hover { background: var(--surface); opacity: 1; }
+
+      .nav-login {
+        border: 1px solid rgba(var(--fg-rgb), 0.2);
+      }
+      .nav-k {
+        background: transparent;
+        border: 1px solid rgba(var(--fg-rgb), 0.18);
+        color: rgba(var(--fg-rgb), 0.38);
+        font-family: inherit;
+        font-size: 0.7rem;
+        letter-spacing: 0.02em;
+        padding: 0.28rem 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        line-height: 1;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .nav-k:hover { background: rgba(var(--fg-rgb), 0.10); color: rgba(var(--fg-rgb), 0.6); }
+      .nav-k-ico { font-size: 0.72rem; opacity: 0.75; }
+
+      .nav-burger {
+        display: none;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--fg);
+        padding: 0.3rem;
+        border-radius: 8px;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-burger:hover { background: rgba(var(--fg-rgb), 0.10); }
+
+      @media (max-width: 900px) {
+        .nav-container { gap: 0.75rem; }
+        .nav-burger { display: inline-flex; }
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: calc(100% + 0.5rem);
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.12rem;
+          background: var(--bg);
+          border: 1px solid rgba(var(--fg-rgb), 0.14);
+          border-radius: 14px;
+          box-shadow: 0 12px 40px rgba(var(--fg-rgb), 0.16);
+          padding: 0.5rem;
+          min-width: 210px;
+          z-index: 120;
+        }
+        .nav-links.open { display: flex; }
+        .nav-group { position: static; }
+        .nav-group-btn { width: 100%; justify-content: flex-start; }
+        .nav-group-menu {
+          position: static;
+          display: block;
+          transform: none;
+          margin: 0.1rem 0 0.2rem 0.7rem;
+          box-shadow: none;
+          border: none;
+          padding: 0;
+          min-width: 0;
+        }
+        .nav-links > a { width: 100%; }
+        .nav-k { width: 100%; justify-content: flex-start; margin-top: 0.2rem; }
       }
 
       .language-selector {
@@ -364,11 +548,22 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         height: 700px;
       }
 
+      .hero-image::after {
+        content: '';
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        bottom: 0;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(var(--fg-rgb), 0.28), transparent);
+        z-index: 2;
+      }
+
       .image-container {
         position: absolute;
-        right: -4rem;
+        right: 0;
         top: 0;
-        width: 120%;
+        width: 100%;
         height: 100%;
       }
 
@@ -376,8 +571,8 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         position: absolute;
         left: 10%;
         top: 40%;
-        transform: translate(-50%, -50%);
-        width: 65%;
+        transform: translate(-25%, -50%);
+        width: 100%;
         height: 70%;
         background: radial-gradient(ellipse at center, #ffd4d4 0%, #ffb3b3 50%, transparent 70%);
         border-radius: 50%;
@@ -385,11 +580,24 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         opacity: 0.9;
       }
 
+      .photo-bg {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 88%;
+        height: 100%;
+        border-radius: 24px;
+        background: var(--photo-bg);
+        z-index: 0;
+      }
+
       .portrait-wrapper {
         position: relative;
+        z-index: 1;
         height: 100%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         align-items: flex-end;
       }
 
@@ -398,6 +606,9 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         width: auto;
         max-width: 100%;
         object-fit: contain;
+        object-position: bottom;
+        border-radius: 18px;
+        filter: brightness(1.12) contrast(0.92);
       }
       /* terminal background (tone-on-tone with var(--bg)) */
       .terminal-bg {
@@ -421,7 +632,7 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         font-size: 0.86rem;
         line-height: 1.75;
         color: rgba(var(--fg-rgb), 0.2);
-        var(--bg)-space: pre-wrap;
+        white-space: pre-wrap;
         word-break: break-word;
       }
 
@@ -452,41 +663,52 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         justify-content: center;
         pointer-events: none;
       }
-      .intro-vara { width: min(90vw, 820px); padding-top: 0.4em; }
-      .intro-vara svg { max-width: 100%; height: auto; overflow: visible !important; }
+      .intro-vara { width: min(90vw, 820px); padding: 1.7em 0 0.7em; overflow: visible; }
+      .intro-vara > * { overflow: visible !important; }
+      .intro-vara svg { max-width: 100%; height: auto; overflow: visible !important; display: block; }
       .intro--out { animation: intro-fade 0.7s ease forwards; }
       @keyframes intro-fade { to { opacity: 0; visibility: hidden; } }
       html.intro-seen .intro { display: none; }
 
       /* floating dock bar (bottom-center) */
-      .dock {
-        --card-padding: 0.3rem;
-        --card-radius: 16px;
+      .dock-wrap {
         position: fixed;
         left: 50%;
         bottom: 1.5rem;
         transform: translateX(-50%);
         z-index: 50;
+      }
+      .dock {
+        --card-padding: 0.3rem;
+        --card-radius: 16px;
         display: flex;
         align-items: center;
-        gap: 0.25rem;
-        max-width: 36rem;
+        gap: 0.2rem;
         width: auto;
         padding: var(--card-padding);
         background: var(--fg);
         border-radius: var(--card-radius);
         box-shadow: 0 10px 30px rgba(var(--fg-rgb), 0.18);
       }
-      .dock-label {
+      .dock-toggle {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
         padding: 0.45rem 0.85rem;
-        color: rgba(var(--bg-rgb), 0.82);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgba(var(--bg-rgb), 0.9);
+        font-family: inherit;
         font-size: 0.8rem;
-        font-weight: 500;
-        var(--bg)-space: nowrap;
+        font-weight: 600;
+        white-space: nowrap;
+        border-radius: calc(var(--card-radius) - var(--card-padding));
+        transition: background 0.2s ease;
       }
+      .dock-toggle:hover { background: rgba(var(--bg-rgb), 0.12); }
+      .dock-caret { font-size: 0.62rem; opacity: 0.7; transition: transform 0.28s ease; }
+      .dock-toggle[aria-expanded='true'] .dock-caret { transform: rotate(180deg); }
       .dock-dot {
         width: 7px;
         height: 7px;
@@ -499,24 +721,158 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         70% { box-shadow: 0 0 0 7px rgba(52, 211, 153, 0); }
         100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
       }
+      .dock-sep { width: 1px; height: 18px; margin: 0 0.15rem; background: rgba(var(--bg-rgb), 0.18); }
       .dock-item {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.45rem 0.85rem;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
         border-radius: calc(var(--card-radius) - var(--card-padding));
         color: var(--bg);
         text-decoration: none;
-        font-size: 0.8rem;
-        font-weight: 600;
-        background: rgba(var(--bg-rgb), 0.08);
-        transition: background 0.2s ease;
+        background: transparent;
+        transition: background 0.2s ease, transform 0.15s ease;
       }
-      .dock-item:hover { background: rgba(var(--bg-rgb), 0.18); }
+      .dock-item svg { width: 16px; height: 16px; display: block; }
+      .dock-item:hover { background: rgba(var(--bg-rgb), 0.14); transform: translateY(-1px); }
+      .dock-item--todo { opacity: 0.4; cursor: default; }
+      .dock-item--todo:hover { background: transparent; transform: none; }
+      .dock-top { cursor: pointer; }
+      .dock-top svg { fill: none; stroke: currentColor; }
+      /* short attention shake (triggered from the about contact hint) */
+      @keyframes dock-shake {
+        10%, 90% { transform: translateX(-2px); }
+        20%, 80% { transform: translateX(3px); }
+        30%, 50%, 70% { transform: translateX(-6px); }
+        40%, 60% { transform: translateX(6px); }
+      }
+      .dock.shake { animation: dock-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+      @media (prefers-reduced-motion: reduce) { .dock.shake { animation: none; } }
+
+      /* contact popover (rises from the dock, macOS-style) */
+      .contact-pop {
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 0.7rem);
+        width: min(360px, 88vw);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-50%) translateY(14px) scale(0.94);
+        transform-origin: bottom center;
+        transition: opacity 0.26s ease, transform 0.34s cubic-bezier(0.2, 0.9, 0.25, 1.12), visibility 0s linear 0.34s;
+      }
+      .contact-pop.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0) scale(1);
+        transition: opacity 0.26s ease, transform 0.34s cubic-bezier(0.2, 0.9, 0.25, 1.12), visibility 0s;
+      }
+      .contact-pop-inner {
+        position: relative;
+        background: var(--bg);
+        border: 1px solid rgba(var(--fg-rgb), 0.12);
+        border-radius: 16px;
+        box-shadow: 0 20px 56px rgba(0, 0, 0, 0.34);
+        padding: 1.4rem;
+      }
+      .contact-pop-inner::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -7px;
+        width: 14px;
+        height: 14px;
+        transform: translateX(-50%) rotate(45deg);
+        background: var(--bg);
+        border-right: 1px solid rgba(var(--fg-rgb), 0.12);
+        border-bottom: 1px solid rgba(var(--fg-rgb), 0.12);
+      }
+      .contact-pop-inner h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+      .contact-pop-inner p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.1rem; }
 
       @media (prefers-reduced-motion: reduce) {
         .dock-dot { animation: none; }
+        .contact-pop { transition: opacity 0.15s ease, visibility 0s; transform: translateX(-50%); }
+        .contact-pop.open { transform: translateX(-50%); }
       }
+      /* scroll reveal (kotei-style rise) */
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+      .reveal.in { opacity: 1; transform: none; }
+
+      /* about section */
+      .about { max-width: 760px; margin: 0 auto; padding: 6rem 0 5rem; }
+      .about-eyebrow { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.78rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+      .about-title { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1.2rem; }
+      .about-lead { font-size: 1.15rem; line-height: 1.7; margin-bottom: 1rem; }
+      .about-lead strong { font-weight: 600; }
+      .about-body { font-size: 1rem; line-height: 1.8; color: var(--muted); margin-bottom: 1.6rem; }
+      .about-block { margin: 2rem 0; }
+      .about-h { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); }
+      .about-ul { list-style: none; margin: 0; padding: 0; }
+      .about-ul > li { position: relative; padding-left: 1.1rem; margin-bottom: 0.55rem; line-height: 1.65; font-size: 0.98rem; }
+      .about-ul > li::before { content: '·'; position: absolute; left: 0.1rem; color: var(--muted); font-weight: 700; }
+      .about-ul strong { font-weight: 600; }
+      .about-ul a { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+      .about-when { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.86rem; color: var(--muted); }
+      .about-muted { color: var(--muted); }
+      .about-sub { list-style: none; margin: 0.45rem 0 0.2rem; padding: 0; }
+      .about-sub > li { position: relative; padding-left: 1.1rem; margin-bottom: 0.35rem; font-size: 0.92rem; line-height: 1.6; color: var(--muted); }
+      .about-sub > li::before { content: '–'; position: absolute; left: 0.1rem; }
+
+      /* home research sections (snsec-style) */
+      .home-sec { max-width: 1000px; margin: 0 auto; padding: 3.2rem 0; }
+      .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(var(--fg-rgb), 0.12); }
+      .sec-title { font-size: 1.65rem; font-weight: 700; letter-spacing: -0.025em; }
+      .sec-all { font-size: 0.85rem; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color 0.2s ease; }
+      .sec-all:hover { color: var(--fg); }
+      .ra-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+      @media (min-width: 760px) { .ra-grid { grid-template-columns: 1fr 1fr; } }
+      .ra-card { border: 1px solid rgba(var(--fg-rgb), 0.08); border-radius: 14px; padding: 1.3rem 1.4rem; background: var(--surface); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .ra-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(var(--fg-rgb), 0.08); }
+      .ra-card h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: 0.45rem; letter-spacing: -0.01em; }
+      .ra-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+      .collab-list { list-style: none; margin: 0; padding: 0; }
+      .collab-list li { padding: 0.85rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.08); line-height: 1.5; }
+      .collab-list li:last-child { border-bottom: none; }
+      .collab-title { font-weight: 600; }
+      .collab-with { color: var(--muted); font-size: 0.9rem; }
+      .feed-list { list-style: none; margin: 0; padding: 0; }
+      .feed-item { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.4rem 1.2rem; padding: 0.85rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.08); }
+      .feed-item:last-child { border-bottom: none; }
+      .feed-date { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.8rem; color: var(--muted); padding-top: 0.1rem; }
+      .feed-text { line-height: 1.6; font-size: 0.96rem; }
+      @media (max-width: 640px) { .feed-item { grid-template-columns: 1fr; gap: 0.2rem; } }
+      .pub-sel-list { list-style: none; margin: 0; padding: 0; }
+      .pub-sel { padding: 1.1rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.08); }
+      .pub-sel:last-child { border-bottom: none; }
+      .pub-sel-title { font-size: 1.02rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.3rem; }
+      .pub-sel-authors { color: var(--fg); font-size: 0.9rem; opacity: 0.85; }
+      .pub-sel-venue { color: var(--muted); font-size: 0.88rem; font-style: italic; margin-top: 0.15rem; }
+      .pub-sel-award { display: inline-block; margin-top: 0.5rem; font-size: 0.72rem; font-weight: 600; color: var(--fg); background: rgba(var(--fg-rgb), 0.08); border-radius: 100px; padding: 0.2rem 0.6rem; }
+      .about-contact-hint { display: inline-block; font-size: 0.92rem; color: var(--muted); cursor: pointer; user-select: none; transition: color 0.2s ease; }
+      .about-contact-hint:hover { color: var(--fg); }
+      .about-contact-hint:hover strong { text-decoration: underline; }
+      .about-contact-hint strong { color: var(--fg); font-weight: 600; }
+
+      /* contact card (elevated surface, seyko-style) */
+      .contact-card { display: flex; flex-direction: column; gap: 1.2rem; border-radius: 16px; background: var(--surface); border: 1px solid rgba(var(--fg-rgb), 0.06); box-shadow: 0 12px 34px rgba(var(--fg-rgb), 0.07); padding: 1.7rem; }
+      .contact-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+      .contact-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+      .contact-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+      .contact-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1rem; border-radius: 10px; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; border: 1px solid rgba(var(--fg-rgb), 0.14); background: var(--bg); color: var(--fg); transition: transform 0.15s ease, background 0.2s ease; }
+      .contact-btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+      .contact-btn:hover { transform: translateY(-1px); }
+
+      /* language switch (eng | kor) */
+      .lang { display: inline-flex; align-items: center; gap: 0.35rem; }
+      .lang-opt { background: transparent; border: none; cursor: pointer; font-family: inherit; font-size: 0.78rem; color: rgba(var(--fg-rgb), 0.4); padding: 0.2rem 0.12rem; transition: color 0.2s ease; }
+      .lang-opt:hover { color: var(--fg); }
+      .lang-opt.active { color: var(--fg); font-weight: 600; }
+      .lang-sep { color: rgba(var(--fg-rgb), 0.25); font-size: 0.78rem; }
+
+      @media (max-width: 900px) { .about-title { font-size: 1.9rem; } .about { padding: 4rem 0; } }
+      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
     </style>
   </head>
   <body>
@@ -533,11 +889,24 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
             <a href="/" class="logo" style="text-decoration: none; color: inherit;">
               <div class="logo-icon"></div>
             </a>
-            <div class="nav-links">
-              <a href="/" class="active">Home</a>
-              <a href="/product">Product</a>
-              <a href="/value">Value</a>
-              <a href="/stories">Stories</a>
+            <button class="nav-burger" id="navBurger" type="button" aria-label="Menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+            <div class="nav-links" id="navLinks">
+              <a href="/#about" data-en="about" data-ko="소개">about</a>
+              <div class="nav-group">
+                <button class="nav-group-btn" type="button" data-en="publications ▾" data-ko="출판물 ▾">publications ▾</button>
+                <div class="nav-group-menu">
+                  <a href="/papers" data-en="papers" data-ko="논문">papers</a>
+                  <a href="/datasets" data-en="datasets" data-ko="데이터셋">datasets</a>
+                  <a href="/patents" data-en="patents" data-ko="특허">patents</a>
+                </div>
+              </div>
+              <a href="/projects" data-en="projects" data-ko="프로젝트">projects</a>
+              <a href="/services" data-en="services" data-ko="활동">services</a>
+              <a href="/blog" data-en="blog" data-ko="블로그">blog</a>
+              <a href="/dashboard" data-en="dashboard" data-ko="대시보드">dashboard</a>
+              <button class="nav-k cmdk-open" type="button" aria-label="Search (Ctrl/Cmd + K)"><span class="nav-k-ico">🔍</span> ctrl k</button>
             </div>
           </div>
         </nav>
@@ -546,45 +915,202 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
       <main>
         <section class="hero">
           <div class="hero-content">
-            <span class="badge">AI-powered workspace</span>
-            <h1>Intelligent Technology<br />That <span>Simplifies Your World</span></h1>
-            <p class="description">
-              From your morning routine to your evening wind-down, intelligent systems seamlessly integrate into your daily flow—so you can focus on what truly matters.
+            <span class="badge" data-en="Security × Machine Learning" data-ko="보안 × 머신러닝">Security × Machine Learning</span>
+            <h1>Chaeyoung Lee<br /><span>Security &amp; ML researcher</span></h1>
+            <p class="description" data-en="Researcher at SNSec Lab, Sookmyung Women's University. I work on data-driven security with machine learning — building robust, explainable systems that detect and explain intrusions, from connected vehicles to evolving network threats." data-ko="숙명여자대학교 SNSec Lab 연구원입니다. 머신러닝 기반의 데이터 주도 보안을 연구하며, 커넥티드 카부터 진화하는 네트워크 위협까지 침입을 탐지하고 설명하는 견고하고 해석 가능한 시스템을 만듭니다.">
+              Researcher at SNSec Lab, Sookmyung Women's University. I work on data-driven security with machine learning — building robust, explainable systems that detect and explain intrusions, from connected vehicles to evolving network threats.
             </p>
             <div class="buttons">
-              <a href="/product" style="text-decoration: none;">
-                <button class="btn btn-primary">Get early access</button>
+              <a href="/papers" style="text-decoration: none;">
+                <button class="btn btn-primary" data-en="Publications" data-ko="출판물">Publications</button>
               </a>
-              <a href="/value" style="text-decoration: none;">
-                <button class="btn btn-secondary">See how it works</button>
+              <a href="/#about" style="text-decoration: none;">
+                <button class="btn btn-secondary" data-en="About me" data-ko="소개">About me</button>
               </a>
-            </div>
-            <div class="trusted-by">
-              <p>Trusted by teams at</p>
-              <div class="logos">
-                <span class="logo-item">TWITCH</span>
-                <span class="logo-item">Stripe</span>
-                <span class="logo-item">GitHub</span>
-                <span class="logo-item">Vercel</span>
-                <span class="logo-item">Slack</span>
-              </div>
             </div>
           </div>
           <div class="hero-image">
             <div class="image-container">
               <div class="gradient-bg"></div>
+              <!--<div class="photo-bg"></div>-->
               <div class="portrait-wrapper">
                 <Image src={selfie} alt="Chaeyoung Lee" />
               </div>
             </div>
           </div>
         </section>
+
+        <section class="home-sec reveal">
+          <div class="sec-head">
+            <h2 class="sec-title" data-en="Key Research Areas" data-ko="주요 연구 분야">Key Research Areas</h2>
+          </div>
+          <div class="ra-grid">
+            {researchAreas.map((a) => (
+              <article class="ra-card">
+                <h3>{a.title}</h3>
+                <p>{a.desc}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {collaborations.length > 0 && (
+          <section class="home-sec reveal">
+            <div class="sec-head">
+              <h2 class="sec-title" data-en="Research & collaborations in progress" data-ko="진행 중인 연구·협업">Research &amp; collaborations in progress</h2>
+            </div>
+            <ul class="collab-list">
+              {collaborations.map((c) => (
+                <li><span class="collab-title">{c.title}</span> <span class="collab-with">{c.with}</span></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {news.length > 0 && (
+          <section class="home-sec reveal">
+            <div class="sec-head">
+              <h2 class="sec-title" data-en="News" data-ko="소식">News</h2>
+            </div>
+            <ul class="feed-list">
+              {news.map((n) => (
+                <li class="feed-item"><span class="feed-date">{n.date}</span><span class="feed-text">{n.text}</span></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {latestPosts.length > 0 && (
+          <section class="home-sec reveal">
+            <div class="sec-head">
+              <h2 class="sec-title" data-en="Latest posts" data-ko="최근 글">Latest posts</h2>
+              <a class="sec-all" href="/blog" data-en="see all →" data-ko="전체 보기 →">see all →</a>
+            </div>
+            <ul class="feed-list">
+              {latestPosts.map((p) => (
+                <li class="feed-item"><span class="feed-date">{p.date}</span><span class="feed-text">{p.title}</span></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {selectedPublications.length > 0 && (
+          <section class="home-sec reveal">
+            <div class="sec-head">
+              <h2 class="sec-title" data-en="Selected publications" data-ko="대표 출판물">Selected publications</h2>
+              <a class="sec-all" href="/papers" data-en="see all →" data-ko="전체 보기 →">see all →</a>
+            </div>
+          <BibList items={selectedPublications} />
+          </section>
+        )}
+
+        <section id="about" class="about">
+          <p class="about-eyebrow reveal" data-en="about" data-ko="소개">about</p>
+          <h2 class="about-title reveal" data-en="Hi, I'm Chaeyoung Lee." data-ko="안녕하세요, 이채영입니다.">Hi, I'm Chaeyoung Lee.</h2>
+          <p class="about-lead reveal">I work at the intersection of <strong>security</strong> and <strong>machine learning</strong> — currently a researcher at <strong>SNSec&nbsp;Lab</strong>, Sookmyung Women's University.</p>
+
+          <div class="about-block reveal">
+            <h3 class="about-h" data-en="Interests" data-ko="관심 분야">Interests</h3>
+            <ul class="about-ul">
+              <li><strong>Core Tech</strong> — Deep Learning, NLP</li>
+              <li><strong>Security</strong> — Data-driven Security, Intrusion Detection</li>
+              <li><strong>Safety &amp; Trust</strong> — Adversarial Machine Learning, Automotive Security</li>
+              <li><strong>Emerging Interests</strong> — Data Poisoning, Machine Unlearning</li>
+            </ul>
+          </div>
+
+          <div class="about-block reveal">
+            <h3 class="about-h" data-en="Education" data-ko="학력">Education</h3>
+            <ul class="about-ul">
+              <li>Undergraduate Student, Division of Artificial Intelligence Engineering (minoring in Big Data), Sookmyung Women's University, <span class="about-when">2023&ndash;Current</span></li>
+            </ul>
+          </div>
+
+          <div class="about-block reveal">
+            <h3 class="about-h" data-en="Previous Affiliation & Activities" data-ko="이전 소속 & 활동">Previous Affiliation &amp; Activities</h3>
+            <ul class="about-ul">
+              <li>
+                <strong>DevOps Engineer</strong>, <a href="https://www.snorose.com/" target="_blank" rel="noopener noreferrer">Snorose</a> <span class="about-muted">(a Sookmyung Women's University community platform)</span>
+                <ul class="about-sub">
+                  <li>Maintained scalable AWS infrastructure and CI/CD pipelines using GitHub Actions.</li>
+                  <li>Built real-time monitoring systems (Prometheus, Grafana, Loki).</li>
+                  <li>Cost measurement and optimization via automated Discord bots.</li>
+                  <li><a href="https://snorose.notion.site/DevOps-2c07ef0aa3bf805e82c7e79dc847a952" target="_blank" rel="noopener noreferrer">Review on DevOps activities ↗</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <p class="about-contact-hint reveal" id="contactHint" role="button" tabindex="0" title="Click the Contact bar below" data-en="Reach out via the Contact bar below ↓" data-ko="아래 Contact 바에서 연락해 주세요 ↓">Reach out via the Contact bar below ↓</p>
+        </section>
       </main>
     </div>
-    <div class="dock" aria-label="Status and links">
-      <span class="dock-label"><span class="dock-dot"></span>Security &amp; ML · SNSec-Lab</span>
-      <a class="dock-item" href="https://github.com/alwaysY0ung" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    <div class="dock-wrap">
+      <div class="contact-pop" id="contactPop" role="dialog" aria-label="Contact" aria-hidden="true">
+        <div class="contact-pop-inner">
+          <h3 data-en="Get in touch" data-ko="연락하기">Get in touch</h3>
+          <p data-en="The email address is assembled on click to prevent spam — feel free to reach out." data-ko="스팸 방지를 위해 메일 주소는 클릭 시 조합됩니다. 편하게 연락 주세요.">The email address is assembled on click to prevent spam — feel free to reach out.</p>
+          <div class="contact-actions">
+            <button class="contact-btn primary" id="emailBtn" type="button" data-en="✉ Email" data-ko="✉ 이메일">✉ Email</button>
+            {socials.filter((s) => s.url).map((s) => (
+              <a class="contact-btn" href={s.url} target="_blank" rel="noopener noreferrer">{s.label} ↗</a>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="dock" aria-label="Contact and links">
+        <button class="dock-toggle" id="dockToggle" type="button" aria-expanded="false" aria-controls="contactPop">
+          <span class="dock-dot"></span>Contact<span class="dock-caret">▴</span>
+        </button>
+        <span class="dock-sep" aria-hidden="true"></span>
+        {socials.map((s) =>
+          s.url ? (
+            <a class="dock-item" href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label}>
+              <Fragment set:html={ICONS[s.key]} />
+            </a>
+          ) : (
+            <span class="dock-item dock-item--todo" role="img" aria-label={s.label} title={`${s.label} (URL 준비 중)`}>
+              <Fragment set:html={ICONS[s.key]} />
+            </span>
+          )
+        )}
+        <span class="dock-sep" aria-hidden="true"></span>
+        <button class="dock-item dock-top" id="dockTop" type="button" aria-label="맨 위로" title="맨 위로">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        </button>
+      </div>
     </div>
+    <script is:inline>
+      (function () {
+        var dock = document.querySelector('.dock');
+        var hint = document.getElementById('contactHint');
+        if (dock && hint) {
+          var shake = function () {
+            dock.classList.remove('shake');
+            void dock.offsetWidth; // restart the animation
+            dock.classList.add('shake');
+          };
+          dock.addEventListener('animationend', function (e) { if (e.animationName === 'dock-shake') dock.classList.remove('shake'); });
+          hint.addEventListener('click', shake);
+          hint.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); shake(); } });
+        }
+        var top = document.getElementById('dockTop');
+        if (top) top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        var t = document.getElementById('dockToggle');
+        var pop = document.getElementById('contactPop');
+        if (!t || !pop) return;
+        function setOpen(o) {
+          pop.classList.toggle('open', o);
+          t.setAttribute('aria-expanded', o ? 'true' : 'false');
+          pop.setAttribute('aria-hidden', o ? 'false' : 'true');
+        }
+        t.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!pop.classList.contains('open')); });
+        pop.addEventListener('click', function (e) { e.stopPropagation(); });
+        document.addEventListener('click', function () { setOpen(false); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+      })();
+    </script>
     <script is:inline src="https://cdn.jsdelivr.net/npm/vara@1.4.1/src/vara.min.js"></script>
     <script>
       const stream = document.getElementById('termStream');
@@ -713,10 +1239,17 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         }
       }
     </script>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle theme">
-      <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    </button>
+    <div class="top-right">
+      <span class="lang" aria-label="Language">
+        <button class="lang-opt active" type="button" data-lang="en">eng</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-opt" type="button" data-lang="ko" title="한국어 버전 준비 중">kor</button>
+      </span>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
     <script is:inline>
       (function () {
         var b = document.getElementById('themeToggle');
@@ -727,9 +1260,6 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         });
       })();
     </script>
-    <button class="cmdk-trigger" id="cmdkTrigger" type="button" aria-label="Search (Cmd/Ctrl + K)" title="Search (⌘K)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    </button>
     <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Command palette">
       <div class="cmdk-panel">
         <input class="cmdk-input" type="text" placeholder="Search pages…  (⌘K)" autocomplete="off" spellcheck="false" aria-label="Search" />
@@ -745,9 +1275,14 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         var list = overlay.querySelector('.cmdk-list');
         var items = [
           { label: 'Home', href: '/', hint: 'home' },
-          { label: 'Product', href: '/product' },
-          { label: 'Value', href: '/value' },
-          { label: 'Stories', href: '/stories' },
+          { label: 'About', href: '/#about' },
+          { label: 'Papers', href: '/papers' },
+          { label: 'Datasets', href: '/datasets' },
+          { label: 'Patents', href: '/patents' },
+          { label: 'Projects', href: '/projects' },
+          { label: 'Services', href: '/services' },
+          { label: 'Blog', href: '/blog' },
+          { label: 'Dashboard', href: '/dashboard' },
           { label: 'GitHub', href: 'https://github.com/alwaysY0ung', hint: '↗', ext: true },
           { label: 'Toggle theme', action: 'theme', hint: '☾ / ☀' },
         ];
@@ -795,7 +1330,7 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         }
         function open() { overlay.classList.add('open'); input.value = ''; sel = 0; render(); setTimeout(function () { input.focus(); }, 0); }
         function close() { overlay.classList.remove('open'); }
-        if (trigger) trigger.addEventListener('click', open);
+        document.querySelectorAll('#cmdkTrigger, .cmdk-open').forEach(function (b) { b.addEventListener('click', open); });
         document.addEventListener('keydown', function (e) {
           if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); overlay.classList.contains('open') ? close() : open(); return; }
           if (!overlay.classList.contains('open')) return;
@@ -806,6 +1341,57 @@ import selfie from '../assets/images/260418_selfie_CYL.jpg';
         });
         input.addEventListener('input', function () { sel = 0; render(); });
         overlay.addEventListener('mousedown', function (e) { if (e.target === overlay) close(); });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        var burger = document.getElementById('navBurger');
+        var links = document.getElementById('navLinks');
+        if (!burger || !links) return;
+        function setOpen(o) { links.classList.toggle('open', o); burger.setAttribute('aria-expanded', o ? 'true' : 'false'); }
+        burger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!links.classList.contains('open')); });
+        document.addEventListener('click', function (e) { if (!links.contains(e.target) && e.target !== burger && !burger.contains(e.target)) setOpen(false); });
+        links.addEventListener('click', function (e) { if (e.target.tagName === 'A') setOpen(false); });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        // scroll reveal
+        var els = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window && els.length) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            });
+          }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+          els.forEach(function (el, i) { el.style.transitionDelay = (i % 5) * 0.08 + 's'; io.observe(el); });
+        } else {
+          els.forEach(function (el) { el.classList.add('in'); });
+        }
+        // spam-safe email (assembled on click, not in static HTML)
+        var eb = document.getElementById('emailBtn');
+        if (eb) {
+          var u = 'amy8985', d = 'snsec.net';
+          eb.addEventListener('click', function () { window.location.href = 'mailto:' + u + '@' + d; });
+        }
+        // language switch (UI only for now)
+        var opts = document.querySelectorAll('.lang-opt');
+        function applyLang(lang) {
+          document.querySelectorAll('[data-en]').forEach(function (el) {
+            var t = lang === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+            if (t != null) el.textContent = t;
+          });
+          opts.forEach(function (x) { x.classList.toggle('active', x.dataset.lang === lang); });
+        }
+        var savedLang = 'en';
+        try { savedLang = localStorage.getItem('lang') || 'en'; } catch (e) {}
+        applyLang(savedLang);
+        opts.forEach(function (o) {
+          o.addEventListener('click', function () {
+            try { localStorage.setItem('lang', o.dataset.lang); } catch (e) {}
+            applyLang(o.dataset.lang);
+          });
+        });
       })();
     </script>
   </body>
