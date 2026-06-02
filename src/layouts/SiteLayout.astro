@@ -19,12 +19,14 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
         --bg: #fdfdfd; --bg-rgb: 253, 253, 253;
         --fg: #0d0d0d; --fg-rgb: 13, 13, 13;
         --surface: #f0f0f0; --muted: #555; --accent-hover: #262626;
+        --block: #333333;
         color-scheme: light;
       }
       html.dark {
         --bg: #0e0e10; --bg-rgb: 14, 14, 16;
         --fg: #f1f1f1; --fg-rgb: 241, 241, 241;
         --surface: #1c1c20; --muted: #9a9a9a; --accent-hover: #dcdcdc;
+        --block: #c9c9c9;
         color-scheme: dark;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,12 +37,12 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
       nav { display: flex; justify-content: center; align-items: center; }
       .nav-container { position: relative; display: inline-flex; align-items: center; gap: 1.25rem; background: rgba(var(--bg-rgb), 0.8); backdrop-filter: blur(10px); padding: 0.6rem 1.5rem; border-radius: 50px; border: 1px solid rgba(var(--fg-rgb), 0.14); }
       .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; }
-      .logo-icon { height: 26px; padding: 0 0.5rem; background: var(--fg); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+      .logo-icon { height: 26px; padding: 0 0.5rem; background: var(--block); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
       .logo-icon::before { content: 'ChaeyoungLee'; color: var(--bg); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.02em; }
       .nav-links { display: flex; gap: 0.5rem; align-items: center; }
       .nav-links a { text-decoration: none; color: var(--fg); font-size: 0.82rem; font-weight: 500; opacity: 0.82; padding: 0.38rem 0.6rem; border-radius: 8px; transition: all 0.2s ease; white-space: nowrap; display: inline-flex; align-items: center; line-height: 1; }
       .nav-links a:hover { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
-      .nav-links a.active { background: var(--fg); color: var(--bg); opacity: 1; box-shadow: 0 4px 12px rgba(var(--fg-rgb), 0.2); }
+      .nav-links a.active { background: var(--block); color: var(--bg); opacity: 1; box-shadow: 0 4px 12px rgba(var(--fg-rgb), 0.2); }
       .nav-group { position: relative; }
       .nav-group::after { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 0.6rem; }
       .nav-group-btn { background: transparent; border: none; cursor: pointer; color: var(--fg); font-family: inherit; font-size: 0.82rem; font-weight: 500; opacity: 0.82; padding: 0.38rem 0.6rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.25rem; white-space: nowrap; line-height: 1; transition: background 0.2s ease, opacity 0.2s ease; }
@@ -49,7 +51,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
       .nav-group:hover .nav-group-menu { display: block; }
       .nav-group-menu a { display: block; padding: 0.5rem 0.8rem; border-radius: 6px; font-size: 0.82rem; opacity: 0.9; }
       .nav-group-menu a:hover { background: var(--surface); opacity: 1; }
-      .nav-group-menu a.active { background: var(--fg); color: var(--bg); opacity: 1; }
+      .nav-group-menu a.active { background: var(--block); color: var(--bg); opacity: 1; }
       .nav-k { background: transparent; border: 1px solid rgba(var(--fg-rgb), 0.18); color: var(--fg); opacity: 0.82; font-family: inherit; font-size: 0.7rem; letter-spacing: 0.02em; padding: 0.28rem 0.5rem; border-radius: 6px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; line-height: 1; transition: background 0.2s ease, opacity 0.2s ease; }
       .nav-k:hover { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
       .nav-k-ico { font-size: 0.72rem; opacity: 0.75; }
@@ -116,7 +118,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
             </button>
             <div class="nav-links" id="navLinks">
-              <a href="/#about" data-en="about" data-ko="소개">about</a>
+              <a href="/about" class={active === 'about' ? 'active' : ''} data-en="about" data-ko="소개">about</a>
               <div class="nav-group">
                 <button class={`nav-group-btn${['papers','datasets','patents'].includes(active) ? ' active' : ''}`} type="button" data-en="publications ▾" data-ko="출판물 ▾">publications ▾</button>
                 <div class="nav-group-menu">
@@ -212,7 +214,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
         var list = overlay.querySelector('.cmdk-list');
         var items = [
           { label: 'Home', href: '/', hint: 'home' },
-          { label: 'About', href: '/#about' },
+          { label: 'About', href: '/about' },
           { label: 'Papers', href: '/papers' },
           { label: 'Datasets', href: '/datasets' },
           { label: 'Patents', href: '/patents' },

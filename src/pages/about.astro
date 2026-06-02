@@ -1,0 +1,63 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+<SiteLayout title="About · Chaeyoung Lee" active="about">
+  <section class="about">
+    <p class="about-eyebrow reveal" data-en="about" data-ko="소개">about</p>
+    <h1 class="about-title reveal" data-en="Hi, I'm Chaeyoung Lee." data-ko="안녕하세요, 이채영입니다.">Hi, I'm Chaeyoung Lee.</h1>
+    <p class="about-lead reveal">I work at the intersection of <strong>security</strong> and <strong>machine learning</strong> — currently a researcher at <strong>SNSec&nbsp;Lab</strong>, Sookmyung Women's University.</p>
+
+    <div class="about-block reveal">
+      <h2 class="about-h" data-en="Interests" data-ko="관심 분야">Interests</h2>
+      <ul class="about-ul">
+        <li><strong>Core Tech</strong> — Deep Learning, NLP</li>
+        <li><strong>Security</strong> — Data-driven Security, Intrusion Detection</li>
+        <li><strong>Safety &amp; Trust</strong> — Adversarial Machine Learning, Automotive Security</li>
+        <li><strong>Emerging Interests</strong> — Data Poisoning, Machine Unlearning</li>
+      </ul>
+    </div>
+
+    <div class="about-block reveal">
+      <h2 class="about-h" data-en="Education" data-ko="학력">Education</h2>
+      <ul class="about-ul">
+        <li>Undergraduate Student, Division of Artificial Intelligence Engineering (minoring in Big Data), Sookmyung Women's University, <span class="about-when">2023&ndash;Current</span></li>
+      </ul>
+    </div>
+
+    <div class="about-block reveal">
+      <h2 class="about-h" data-en="Previous Affiliation & Activities" data-ko="이전 소속 & 활동">Previous Affiliation &amp; Activities</h2>
+      <ul class="about-ul">
+        <li>
+          <strong>DevOps Engineer</strong>, <a href="https://www.snorose.com/" target="_blank" rel="noopener noreferrer">Snorose</a> <span class="about-muted">(a Sookmyung Women's University community platform)</span>
+          <ul class="about-sub">
+            <li>Maintained scalable AWS infrastructure and CI/CD pipelines using GitHub Actions.</li>
+            <li>Built real-time monitoring systems (Prometheus, Grafana, Loki).</li>
+            <li>Cost measurement and optimization via automated Discord bots.</li>
+            <li><a href="https://snorose.notion.site/DevOps-2c07ef0aa3bf805e82c7e79dc847a952" target="_blank" rel="noopener noreferrer">Review on DevOps activities ↗</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .about { max-width: 760px; margin: 0 auto; padding: 1.5rem 0 4rem; }
+  .about-eyebrow { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.78rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+  .about-title { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1.2rem; }
+  .about-lead { font-size: 1.15rem; line-height: 1.7; margin-bottom: 1rem; }
+  .about-lead strong { font-weight: 600; }
+  .about-block { margin: 2rem 0; }
+  .about-h { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); }
+  .about-ul { list-style: none; margin: 0; padding: 0; }
+  .about-ul > li { position: relative; padding-left: 1.1rem; margin-bottom: 0.55rem; line-height: 1.65; font-size: 0.98rem; }
+  .about-ul > li::before { content: '·'; position: absolute; left: 0.1rem; color: var(--muted); font-weight: 700; }
+  .about-ul strong { font-weight: 600; }
+  .about-ul a { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+  .about-when { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.86rem; color: var(--muted); }
+  .about-muted { color: var(--muted); }
+  .about-sub { list-style: none; margin: 0.45rem 0 0.2rem; padding: 0; }
+  .about-sub > li { position: relative; padding-left: 1.1rem; margin-bottom: 0.35rem; font-size: 0.92rem; line-height: 1.6; color: var(--muted); }
+  .about-sub > li::before { content: '–'; position: absolute; left: 0.1rem; }
+  @media (max-width: 900px) { .about-title { font-size: 1.9rem; } }
+</style>

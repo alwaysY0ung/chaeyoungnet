@@ -82,6 +82,7 @@ const latestPosts = [];
         --fg: #0d0d0d; --fg-rgb: 13, 13, 13;
         --surface: #f0f0f0; --muted: #555; --accent-hover: #262626;
         --photo-bg: #f2f1ef;
+        --block: #333333; --block-fg: #fdfdfd;
         color-scheme: light;
       }
       html.dark {
@@ -89,6 +90,7 @@ const latestPosts = [];
         --fg: #f1f1f1; --fg-rgb: 241, 241, 241;
         --surface: #1c1c20; --muted: #9a9a9a; --accent-hover: #dcdcdc;
         --photo-bg: #18181c;
+        --block: #c9c9c9; --block-fg: #0e0e10;
         color-scheme: dark;
       }
       html { background-color: var(--bg); }
@@ -174,7 +176,7 @@ const latestPosts = [];
       .logo-icon {
         height: 26px;
         padding: 0 0.5rem;
-        background: var(--fg);
+        background: var(--block);
         border-radius: 7px;
         display: flex;
         align-items: center;
@@ -216,7 +218,7 @@ const latestPosts = [];
       }
 
       .nav-links a.active {
-        background: var(--fg);
+        background: var(--block);
         color: var(--bg);
         opacity: 1;
         box-shadow: 0 4px 12px rgba(var(--fg-rgb), 0.2);
@@ -445,7 +447,7 @@ const latestPosts = [];
         content: '';
         width: 8px;
         height: 8px;
-        background: var(--fg);
+        background: var(--block);
         border-radius: 50%;
       }
 
@@ -490,7 +492,7 @@ const latestPosts = [];
       }
 
       .btn-primary {
-        background: var(--fg);
+        background: var(--block);
         color: var(--bg);
         box-shadow: 0 8px 24px rgba(var(--fg-rgb), 0.2);
       }
@@ -575,8 +577,8 @@ const latestPosts = [];
         position: absolute;
         left: 10%;
         top: 40%;
-        transform: translate(-25%, -50%);
-        width: 100%;
+        transform: translate(-40%, -30%);
+        width: 115%;
         height: 70%;
         background: radial-gradient(ellipse at center, #ffd4d4 0%, #ffb3b3 50%, transparent 70%);
         border-radius: 50%;
@@ -606,7 +608,7 @@ const latestPosts = [];
       }
 
       .portrait-wrapper img {
-        height: 100%;
+        height: 85%;
         width: auto;
         max-width: 100%;
         object-fit: contain;
@@ -690,7 +692,7 @@ const latestPosts = [];
         gap: 0.2rem;
         width: auto;
         padding: var(--card-padding);
-        background: var(--fg);
+        background: var(--block);
         border-radius: var(--card-radius);
         box-shadow: 0 10px 30px rgba(var(--fg-rgb), 0.18);
       }
@@ -754,46 +756,51 @@ const latestPosts = [];
       .dock.shake { animation: dock-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
       @media (prefers-reduced-motion: reduce) { .dock.shake { animation: none; } }
 
-      /* contact popover (rises from the dock, macOS-style) */
+      /* contact popover — a macOS window that minimizes to / restores from the dock (⌘M feel) */
       .contact-pop {
         position: absolute;
         left: 50%;
-        bottom: calc(100% + 0.7rem);
-        width: min(360px, 88vw);
+        bottom: calc(100% + 1.6rem);
+        width: min(440px, 92vw);
         opacity: 0;
         visibility: hidden;
-        transform: translateX(-50%) translateY(14px) scale(0.94);
+        transform: translateX(-50%) translateY(30px) scale(0.55);
         transform-origin: bottom center;
-        transition: opacity 0.26s ease, transform 0.34s cubic-bezier(0.2, 0.9, 0.25, 1.12), visibility 0s linear 0.34s;
+        transition: opacity 0.24s ease, transform 0.36s cubic-bezier(0.2, 0.9, 0.25, 1.12), visibility 0s linear 0.36s;
       }
       .contact-pop.open {
         opacity: 1;
         visibility: visible;
         transform: translateX(-50%) translateY(0) scale(1);
-        transition: opacity 0.26s ease, transform 0.34s cubic-bezier(0.2, 0.9, 0.25, 1.12), visibility 0s;
+        transition: opacity 0.2s ease, transform 0.36s cubic-bezier(0.2, 0.9, 0.25, 1.12), visibility 0s;
       }
-      .contact-pop-inner {
-        position: relative;
+      .contact-win {
         background: var(--bg);
-        border: 1px solid rgba(var(--fg-rgb), 0.12);
-        border-radius: 16px;
-        box-shadow: 0 20px 56px rgba(0, 0, 0, 0.34);
-        padding: 1.4rem;
+        border: 1px solid rgba(var(--fg-rgb), 0.14);
+        border-radius: 12px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+        overflow: hidden;
       }
-      .contact-pop-inner::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        bottom: -7px;
-        width: 14px;
-        height: 14px;
-        transform: translateX(-50%) rotate(45deg);
-        background: var(--bg);
-        border-right: 1px solid rgba(var(--fg-rgb), 0.12);
-        border-bottom: 1px solid rgba(var(--fg-rgb), 0.12);
+      .contact-head {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.6rem 0.85rem;
+        background: rgba(var(--fg-rgb), 0.04);
+        border-bottom: 1px solid rgba(var(--fg-rgb), 0.08);
       }
-      .contact-pop-inner h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
-      .contact-pop-inner p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.1rem; }
+      .win-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+      .win-dot--r { background: #ff5f57; } .win-dot--y { background: #febc2e; } .win-dot--g { background: #28c840; }
+      .win-title { margin-left: 0.4rem; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.74rem; color: var(--muted); }
+      .contact-body { padding: 1.45rem 1.55rem 1.55rem; font-family: ui-monospace, 'SF Mono', Menlo, 'Consolas', monospace; }
+      .contact-cmd { font-size: 0.84rem; color: rgba(var(--fg-rgb), 0.5); margin-bottom: 0.7rem; }
+      .contact-cmd .term-prompt { color: rgba(var(--fg-rgb), 0.38); }
+      .contact-row { display: flex; align-items: center; gap: 0.7rem; }
+      .email-reveal { font-size: 1.06rem; font-weight: 600; color: var(--fg); text-decoration: none; word-break: break-all; }
+      a.email-reveal:hover { text-decoration: underline; }
+      .email-copy { margin-left: auto; flex: none; font-family: inherit; font-size: 0.72rem; padding: 0.32rem 0.62rem; border-radius: 6px; border: 1px solid rgba(var(--fg-rgb), 0.18); background: var(--block); color: var(--bg); cursor: pointer; transition: opacity 0.2s ease; }
+      .email-copy:hover { opacity: 0.85; }
+      .contact-foot { margin-top: 0.85rem; font-family: 'Inter', system-ui, sans-serif; font-size: 0.76rem; color: var(--muted); line-height: 1.55; }
 
       @media (prefers-reduced-motion: reduce) {
         .dock-dot { animation: none; }
@@ -865,7 +872,7 @@ const latestPosts = [];
       .contact-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
       .contact-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
       .contact-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1rem; border-radius: 10px; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-decoration: none; border: 1px solid rgba(var(--fg-rgb), 0.14); background: var(--bg); color: var(--fg); transition: transform 0.15s ease, background 0.2s ease; }
-      .contact-btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+      .contact-btn.primary { background: var(--block); color: var(--bg); border-color: var(--block); }
       .contact-btn:hover { transform: translateY(-1px); }
 
       /* language switch (eng | kor) */
@@ -897,7 +904,7 @@ const latestPosts = [];
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
             </button>
             <div class="nav-links" id="navLinks">
-              <a href="/#about" data-en="about" data-ko="소개">about</a>
+              <a href="/about" data-en="about" data-ko="소개">about</a>
               <div class="nav-group">
                 <button class="nav-group-btn" type="button" data-en="publications ▾" data-ko="출판물 ▾">publications ▾</button>
                 <div class="nav-group-menu">
@@ -928,7 +935,7 @@ const latestPosts = [];
               <a href="/papers" style="text-decoration: none;">
                 <button class="btn btn-primary" data-en="Publications" data-ko="출판물">Publications</button>
               </a>
-              <a href="/#about" style="text-decoration: none;">
+              <a href="/about" style="text-decoration: none;">
                 <button class="btn btn-secondary" data-en="About me" data-ko="소개">About me</button>
               </a>
             </div>
@@ -1007,64 +1014,30 @@ const latestPosts = [];
           <BibList items={selectedPublications} />
           </section>
         )}
-
-        <section id="about" class="about">
-          <p class="about-eyebrow reveal" data-en="about" data-ko="소개">about</p>
-          <h2 class="about-title reveal" data-en="Hi, I'm Chaeyoung Lee." data-ko="안녕하세요, 이채영입니다.">Hi, I'm Chaeyoung Lee.</h2>
-          <p class="about-lead reveal">I work at the intersection of <strong>security</strong> and <strong>machine learning</strong> — currently a researcher at <strong>SNSec&nbsp;Lab</strong>, Sookmyung Women's University.</p>
-
-          <div class="about-block reveal">
-            <h3 class="about-h" data-en="Interests" data-ko="관심 분야">Interests</h3>
-            <ul class="about-ul">
-              <li><strong>Core Tech</strong> — Deep Learning, NLP</li>
-              <li><strong>Security</strong> — Data-driven Security, Intrusion Detection</li>
-              <li><strong>Safety &amp; Trust</strong> — Adversarial Machine Learning, Automotive Security</li>
-              <li><strong>Emerging Interests</strong> — Data Poisoning, Machine Unlearning</li>
-            </ul>
-          </div>
-
-          <div class="about-block reveal">
-            <h3 class="about-h" data-en="Education" data-ko="학력">Education</h3>
-            <ul class="about-ul">
-              <li>Undergraduate Student, Division of Artificial Intelligence Engineering (minoring in Big Data), Sookmyung Women's University, <span class="about-when">2023&ndash;Current</span></li>
-            </ul>
-          </div>
-
-          <div class="about-block reveal">
-            <h3 class="about-h" data-en="Previous Affiliation & Activities" data-ko="이전 소속 & 활동">Previous Affiliation &amp; Activities</h3>
-            <ul class="about-ul">
-              <li>
-                <strong>DevOps Engineer</strong>, <a href="https://www.snorose.com/" target="_blank" rel="noopener noreferrer">Snorose</a> <span class="about-muted">(a Sookmyung Women's University community platform)</span>
-                <ul class="about-sub">
-                  <li>Maintained scalable AWS infrastructure and CI/CD pipelines using GitHub Actions.</li>
-                  <li>Built real-time monitoring systems (Prometheus, Grafana, Loki).</li>
-                  <li>Cost measurement and optimization via automated Discord bots.</li>
-                  <li><a href="https://snorose.notion.site/DevOps-2c07ef0aa3bf805e82c7e79dc847a952" target="_blank" rel="noopener noreferrer">Review on DevOps activities ↗</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-
-          <p class="about-contact-hint reveal" id="contactHint" role="button" tabindex="0" title="Click the Contact bar below" data-en="Reach out via the Contact bar below ↓" data-ko="아래 Contact 바에서 연락해 주세요 ↓">Reach out via the Contact bar below ↓</p>
-        </section>
       </main>
     </div>
     <div class="dock-wrap">
-      <div class="contact-pop" id="contactPop" role="dialog" aria-label="Contact" aria-hidden="true">
-        <div class="contact-pop-inner">
-          <h3 data-en="Get in touch" data-ko="연락하기">Get in touch</h3>
-          <p data-en="The email address is assembled on click to prevent spam — feel free to reach out." data-ko="스팸 방지를 위해 메일 주소는 클릭 시 조합됩니다. 편하게 연락 주세요.">The email address is assembled on click to prevent spam — feel free to reach out.</p>
-          <div class="contact-actions">
-            <button class="contact-btn primary" id="emailBtn" type="button" data-en="✉ Email" data-ko="✉ 이메일">✉ Email</button>
-            {socials.filter((s) => s.url).map((s) => (
-              <a class="contact-btn" href={s.url} target="_blank" rel="noopener noreferrer">{s.label} ↗</a>
-            ))}
+      <div class="contact-pop" id="contactPop" role="dialog" aria-label="Contact email" aria-hidden="true">
+        <div class="contact-win">
+          <div class="contact-head">
+            <span class="win-dot win-dot--r"></span>
+            <span class="win-dot win-dot--y"></span>
+            <span class="win-dot win-dot--g"></span>
+            <span class="win-title">contact — email</span>
+          </div>
+          <div class="contact-body">
+            <p class="contact-cmd"><span class="term-prompt">~$ </span>echo&nbsp;$EMAIL</p>
+            <div class="contact-row">
+              <a class="email-reveal" id="emailReveal" href="#" rel="noopener">…</a>
+              <button class="email-copy" id="emailCopy" type="button" aria-label="Copy email" data-en="copy" data-ko="복사">copy</button>
+            </div>
+            <p class="contact-foot" id="contactFoot" data-en="Tip: copy works on any device. The address is assembled in your browser, never written in the page source." data-ko="팁: 복사는 모든 기기에서 됩니다. 주소는 브라우저에서 조합되며 페이지 소스에는 적혀 있지 않습니다.">Tip: copy works on any device. The address is assembled in your browser, never written in the page source.</p>
           </div>
         </div>
       </div>
       <div class="dock" aria-label="Contact and links">
         <button class="dock-toggle" id="dockToggle" type="button" aria-expanded="false" aria-controls="contactPop">
-          <span class="dock-dot"></span>Contact<span class="dock-caret">▴</span>
+          <span class="dock-dot"></span>Contact in email<span class="dock-caret">▴</span>
         </button>
         <span class="dock-sep" aria-hidden="true"></span>
         {socials.map((s) =>
@@ -1105,6 +1078,7 @@ const latestPosts = [];
         var pop = document.getElementById('contactPop');
         if (!t || !pop) return;
         function setOpen(o) {
+          if (o && typeof window.revealEmail === 'function') window.revealEmail();
           pop.classList.toggle('open', o);
           t.setAttribute('aria-expanded', o ? 'true' : 'false');
           pop.setAttribute('aria-hidden', o ? 'false' : 'true');
@@ -1279,7 +1253,7 @@ const latestPosts = [];
         var list = overlay.querySelector('.cmdk-list');
         var items = [
           { label: 'Home', href: '/', hint: 'home' },
-          { label: 'About', href: '/#about' },
+          { label: 'About', href: '/about' },
           { label: 'Papers', href: '/papers' },
           { label: 'Datasets', href: '/datasets' },
           { label: 'Patents', href: '/patents' },
@@ -1372,12 +1346,46 @@ const latestPosts = [];
         } else {
           els.forEach(function (el) { el.classList.add('in'); });
         }
-        // spam-safe email (assembled on click, not in static HTML)
-        var eb = document.getElementById('emailBtn');
-        if (eb) {
-          var u = 'amy8985', d = 'snsec.net';
-          eb.addEventListener('click', function () { window.location.href = 'mailto:' + u + '@' + d; });
-        }
+        // spam-safe email: base64-encoded parts, decoded ONLY on user interaction
+        // (when the Contact window opens / on copy). Never present as plaintext in the
+        // page source, never joined with a literal "@", and never assembled on load —
+        // so crawlers that don't open the window never obtain the address.
+        window.revealEmail = (function () {
+          var done = false;
+          return function () {
+            if (done) return;
+            done = true;
+            var reveal = document.getElementById('emailReveal');
+            var copyBtn = document.getElementById('emailCopy');
+            if (!reveal) return;
+            var addr = atob('Y2hhZXlvdW5n') + String.fromCharCode(64) + atob('c25zZWMubmV0');
+            reveal.textContent = addr;
+            reveal.setAttribute('href', 'mailto:' + addr);
+            if (copyBtn) {
+              var labelEn = copyBtn.getAttribute('data-en') || 'copy';
+              copyBtn.addEventListener('click', function () {
+                function fin() {
+                  copyBtn.textContent = '✓ copied';
+                  setTimeout(function () {
+                    var ko = copyBtn.getAttribute('data-ko'), cur = 'en';
+                    try { cur = localStorage.getItem('lang') || 'en'; } catch (e) {}
+                    copyBtn.textContent = cur === 'ko' && ko ? ko : labelEn;
+                  }, 1400);
+                }
+                function fallback() {
+                  var t = document.createElement('textarea');
+                  t.value = addr; t.setAttribute('readonly', ''); t.style.position = 'absolute'; t.style.left = '-9999px';
+                  document.body.appendChild(t); t.select();
+                  try { document.execCommand('copy'); fin(); } catch (e) {}
+                  document.body.removeChild(t);
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                  navigator.clipboard.writeText(addr).then(fin, fallback);
+                } else { fallback(); }
+              });
+            }
+          };
+        })();
         // language switch (UI only for now)
         var opts = document.querySelectorAll('.lang-opt');
         function applyLang(lang) {
