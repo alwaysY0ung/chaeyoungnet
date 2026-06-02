@@ -26,12 +26,12 @@ const GH_USER = 'alwaysY0ung';
   .dash-card-head h2 { font-size: 1.1rem; font-weight: 700; }
   .dash-card-head a { font-size: 0.84rem; color: var(--muted); text-decoration: none; }
   .dash-card-head a:hover { color: var(--fg); }
-  .dash-graph { width: 100%; height: auto; display: block; }
+  .dash-graph { width: 100%; height: auto; display: block; filter: saturate(1.2) contrast(1.06); }
 </style>
 
 <script is:inline define:vars={{ GH_USER }}>
   (function () {
     var img = document.getElementById('ghChart');
-    if (img) img.src = 'https://ghchart.rshah.org/003087/' + GH_USER + '?' + Date.now();
+    if (img) img.src = 'https://ghchart.rshah.org/f0808f/' + GH_USER + '?' + Date.now();
   })();
 </script>
