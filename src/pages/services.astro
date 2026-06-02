@@ -1,0 +1,33 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+// TODO: 실제 활동(리뷰어, 발표, 위원회, 조교 등)으로 교체하세요.
+const services = [
+  { year: '2026', role: '[역할/활동 1]', org: '[기관·학회·행사]' },
+  { year: '2025', role: '[역할/활동 2]', org: '[기관·학회·행사]' },
+  { year: '2025', role: '[역할/활동 3]', org: '[기관·학회·행사]' },
+];
+---
+<SiteLayout title="Services · Chaeyoung Lee" active="services">
+  <section class="page-wrap">
+    <h1 class="page-h1 reveal" data-en="Services" data-ko="활동">Services</h1>
+    <p class="page-lead reveal" data-en="Academic and community service — reviewing, talks, committees, teaching, and more." data-ko="학계·커뮤니티 활동 — 리뷰, 발표, 위원회, 교육 등.">Academic and community service — reviewing, talks, committees, teaching, and more.</p>
+    <ul class="svc-list">
+      {services.map((s) => (
+        <li class="svc-item reveal">
+          <span class="svc-year">{s.year}</span>
+          <span class="svc-body"><strong>{s.role}</strong><span class="svc-org">{s.org}</span></span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</SiteLayout>
+
+<style>
+  .svc-list { list-style: none; margin: 0; padding: 0; max-width: 760px; border-top: 1px solid rgba(var(--fg-rgb), 0.1); }
+  .svc-item { display: flex; gap: 1.5rem; align-items: baseline; padding: 1.1rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); }
+  .svc-year { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.82rem; color: var(--muted); min-width: 3.5rem; }
+  .svc-body { display: flex; flex-direction: column; gap: 0.2rem; }
+  .svc-body strong { font-weight: 600; font-size: 1.02rem; }
+  .svc-org { color: var(--muted); font-size: 0.9rem; }
+</style>

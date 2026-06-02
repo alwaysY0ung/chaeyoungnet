@@ -1,0 +1,38 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+// TODO: 글이 생기면 여기에 추가하세요. (date 는 YYYY-MM-DD, href 는 글 링크)
+const posts = [
+  // { date: '2026-06-01', title: '[글 제목]', desc: '[한 줄 요약]', href: '#' },
+];
+---
+<SiteLayout title="Blog · Chaeyoung Lee" active="blog">
+  <section class="page-wrap">
+    <h1 class="page-h1 reveal" data-en="Blog" data-ko="블로그">Blog</h1>
+    <p class="page-lead reveal" data-en="Research notes, things I read, and thoughts." data-ko="연구 노트, 읽은 것, 생각들.">Research notes, things I read, and thoughts.</p>
+    {posts.length === 0 ? (
+      <p class="page-note reveal" data-en="No posts yet — the first one is coming soon. ✍️" data-ko="아직 작성된 글이 없습니다. 곧 첫 글로 찾아뵐게요. ✍️">No posts yet — the first one is coming soon. ✍️</p>
+    ) : (
+      <ul class="post-list">
+        {posts.map((p) => (
+          <li class="post-item reveal">
+            <a href={p.href}>
+              <span class="post-date">{p.date}</span>
+              <span class="post-title">{p.title}</span>
+              <span class="post-desc">{p.desc}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</SiteLayout>
+
+<style>
+  .post-list { list-style: none; margin: 0; padding: 0; max-width: 760px; }
+  .post-item a { display: grid; grid-template-columns: 6rem 1fr; gap: 0.3rem 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); text-decoration: none; color: inherit; }
+  .post-date { grid-row: span 2; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.82rem; color: var(--muted); }
+  .post-title { font-weight: 600; font-size: 1.05rem; }
+  .post-desc { color: var(--muted); font-size: 0.9rem; }
+  .post-item a:hover .post-title { text-decoration: underline; }
+</style>

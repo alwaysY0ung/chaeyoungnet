@@ -1,0 +1,119 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+// Single source of truth for Projects — add an entry and both the
+// right-side cards and the left-side code panel update automatically.
+const projects = [
+  { year: '2026', tag: 'security · ML', title: '[프로젝트 제목 1]', desc: '[프로젝트 설명 — 무엇을, 왜, 결과는. 한두 문장.]' },
+  { year: '2025', tag: 'research',      title: '[프로젝트 제목 2]', desc: '[프로젝트 설명.]' },
+  { year: '2025', tag: 'dev',           title: '[프로젝트 제목 3]', desc: '[프로젝트 설명.]' },
+  { year: '2024', tag: 'etc',           title: '[프로젝트 제목 4]', desc: '[프로젝트 설명.]' },
+];
+const projectsCode =
+  'const projects: Project[] = [\n' +
+  projects
+    .map(
+      (p) =>
+        '  {\n' +
+        '    year: ' + p.year + ',\n' +
+        '    tag: ' + JSON.stringify(p.tag) + ',\n' +
+        '    title: ' + JSON.stringify(p.title) + ',\n' +
+        '  },'
+    )
+    .join('\n') +
+  '\n];';
+---
+<SiteLayout title="Projects · Chaeyoung Lee" active="projects">
+  <section class="proj">
+    <div class="proj-left">
+      <div class="proj-left-inner">
+        <p class="proj-eyebrow reveal" data-en="projects" data-ko="프로젝트">projects</p>
+        <h2 class="proj-title reveal" data-en="Selected work" data-ko="주요 작업">Selected work</h2>
+        <div class="code-card reveal" aria-hidden="true">
+          <div class="code-head">
+            <span class="code-dot code-dot--r"></span>
+            <span class="code-dot code-dot--y"></span>
+            <span class="code-dot code-dot--g"></span>
+            <span class="code-file">projects.ts</span>
+          </div>
+          <pre class="code-body"><code id="projCode" data-code={projectsCode}></code><span class="code-cursor"></span></pre>
+        </div>
+      </div>
+    </div>
+    <div class="proj-list">
+      {projects.map((p) => (
+        <article class="proj-card reveal">
+          <div class="proj-card-top"><span class="proj-year">{p.year}</span><span class="proj-tag">{p.tag}</span></div>
+          <h3>{p.title}</h3>
+          <p>{p.desc}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .proj { display: grid; grid-template-columns: 44% 1fr; gap: 3.2rem; max-width: 1120px; margin: 0 auto; padding: 2rem 0 6rem; align-items: start; }
+  .proj-left { position: sticky; top: 6rem; align-self: start; }
+  .proj-eyebrow { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.78rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; }
+  .proj-title { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; margin: 0.2rem 0 1.4rem; }
+  .proj-list { display: flex; flex-direction: column; gap: 1.4rem; }
+
+  .code-card { border: 1px solid rgba(var(--fg-rgb), 0.1); border-radius: 14px; background: var(--surface); overflow: hidden; box-shadow: 0 14px 40px rgba(var(--fg-rgb), 0.08); }
+  .code-head { display: flex; align-items: center; gap: 0.45rem; padding: 0.7rem 0.95rem; border-bottom: 1px solid rgba(var(--fg-rgb), 0.08); background: rgba(var(--fg-rgb), 0.03); }
+  .code-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .code-dot--r { background: #ff5f57; } .code-dot--y { background: #febc2e; } .code-dot--g { background: #28c840; }
+  .code-file { margin-left: 0.5rem; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.74rem; color: var(--muted); }
+  .code-body { margin: 0; padding: 1.1rem 1.2rem; font-family: ui-monospace, 'SF Mono', Menlo, 'Consolas', monospace; font-size: 0.82rem; line-height: 1.7; color: rgba(var(--fg-rgb), 0.78); white-space: pre-wrap; word-break: break-word; min-height: 16.5em; }
+  .code-cursor { display: inline-block; width: 0.55ch; height: 1.05em; vertical-align: text-bottom; background: rgba(var(--fg-rgb), 0.55); animation: code-blink 1.05s steps(1) infinite; }
+  @keyframes code-blink { 50% { opacity: 0; } }
+  :global(.code-kw) { color: #c678dd; } :global(.code-str) { color: #98c379; } :global(.code-num) { color: #d19a66; } :global(.code-punc) { color: rgba(var(--fg-rgb), 0.45); }
+  html.dark .code-body { color: rgba(var(--fg-rgb), 0.82); }
+
+  .proj-card { border: 1px solid rgba(var(--fg-rgb), 0.08); border-radius: 16px; padding: 1.6rem; background: var(--surface); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .proj-card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(var(--fg-rgb), 0.08); }
+  .proj-card-top { display: flex; gap: 0.7rem; align-items: center; margin-bottom: 0.7rem; }
+  .proj-year { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.74rem; color: var(--muted); }
+  .proj-tag { font-size: 0.7rem; color: var(--muted); border: 1px solid rgba(var(--fg-rgb), 0.14); padding: 0.16rem 0.55rem; border-radius: 100px; }
+  .proj-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .proj-card p { color: var(--muted); line-height: 1.7; font-size: 0.92rem; }
+
+  @media (max-width: 820px) { .proj { grid-template-columns: 1fr; gap: 1.5rem; padding: 1rem 0 3.5rem; } .proj-left { position: static; } .proj-title { font-size: 1.9rem; } }
+  @media (prefers-reduced-motion: reduce) { .code-cursor { animation: none; } }
+</style>
+
+<script is:inline>
+  (function () {
+    var el = document.getElementById('projCode');
+    if (!el) return;
+    var code = el.getAttribute('data-code') || '';
+    function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function highlight(s) {
+      return esc(s)
+        .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="code-str">$1</span>')
+        .replace(/\b(const|let|var|Project)\b/g, '<span class="code-kw">$1</span>')
+        .replace(/(^|[\s:[])(\d+)(?=,|\s|$)/g, '$1<span class="code-num">$2</span>')
+        .replace(/([{}[\];,])/g, '<span class="code-punc">$1</span>');
+    }
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var done = false;
+    function type() {
+      if (done) return; done = true;
+      if (reduce) { el.innerHTML = highlight(code); return; }
+      var i = 0;
+      (function step() {
+        if (i >= code.length) { el.innerHTML = highlight(code); return; }
+        var n = Math.min(code.length, i + 1 + Math.floor(Math.random() * 2));
+        el.textContent = code.slice(0, n);
+        i = n;
+        setTimeout(step, 12 + Math.random() * 22);
+      })();
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (ents) {
+        ents.forEach(function (e) { if (e.isIntersecting) { type(); io.disconnect(); } });
+      }, { threshold: 0.25 });
+      io.observe(el);
+    } else { type(); }
+  })();
+</script>

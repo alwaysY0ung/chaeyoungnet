@@ -1,0 +1,49 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const GH_USER = 'alwaysY0ung';
+---
+<SiteLayout title="Dashboard · Chaeyoung Lee" active="dashboard">
+  <section class="page-wrap">
+    <h1 class="page-h1 reveal" data-en="Dashboard" data-ko="대시보드">Dashboard</h1>
+    <p class="page-lead reveal" data-en="Activity at a glance — GitHub contributions and stats." data-ko="활동 현황 한눈에 보기 — GitHub 기여, 통계.">Activity at a glance — GitHub contributions and stats.</p>
+
+    <div class="dash-card reveal">
+      <div class="dash-card-head">
+        <h2>GitHub contributions</h2>
+        <a href={`https://github.com/${GH_USER}`} target="_blank" rel="noopener noreferrer">@{GH_USER} ↗</a>
+      </div>
+      <img id="ghChart" class="dash-graph" alt="GitHub contribution graph" loading="lazy" />
+    </div>
+
+    <div class="dash-grid">
+      <a class="dash-stat reveal" href={`https://github.com/${GH_USER}`} target="_blank" rel="noopener noreferrer">
+        <img src={`https://github-readme-stats.vercel.app/api?username=${GH_USER}&show_icons=true&hide_border=true&card_width=420`} alt="GitHub stats" loading="lazy" />
+      </a>
+      <a class="dash-stat reveal" href={`https://github.com/${GH_USER}`} target="_blank" rel="noopener noreferrer">
+        <img src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${GH_USER}&layout=compact&hide_border=true&card_width=420`} alt="Top languages" loading="lazy" />
+      </a>
+    </div>
+    <p class="page-note reveal" data-en="※ Graphs are rendered via external services (ghchart · github-readme-stats)." data-ko="※ 그래프는 외부 서비스(ghchart · github-readme-stats)로 렌더링됩니다.">※ Graphs are rendered via external services (ghchart · github-readme-stats).</p>
+  </section>
+</SiteLayout>
+
+<style>
+  .dash-card { border: 1px solid rgba(var(--fg-rgb), 0.1); border-radius: 16px; background: var(--surface); padding: 1.4rem 1.6rem 1.6rem; max-width: 900px; margin-bottom: 1.6rem; }
+  .dash-card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.1rem; flex-wrap: wrap; gap: 0.5rem; }
+  .dash-card-head h2 { font-size: 1.1rem; font-weight: 700; }
+  .dash-card-head a { font-size: 0.84rem; color: var(--muted); text-decoration: none; }
+  .dash-card-head a:hover { color: var(--fg); }
+  .dash-graph { width: 100%; height: auto; display: block; }
+  .dash-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; max-width: 900px; margin-bottom: 1.4rem; }
+  @media (min-width: 760px) { .dash-grid { grid-template-columns: 1fr 1fr; } }
+  .dash-stat { display: block; }
+  .dash-stat img { width: 100%; height: auto; display: block; border-radius: 12px; }
+</style>
+
+<script is:inline define:vars={{ GH_USER }}>
+  (function () {
+    var img = document.getElementById('ghChart');
+    if (img) img.src = 'https://ghchart.rshah.org/003087/' + GH_USER + '?' + Date.now();
+  })();
+</script>
