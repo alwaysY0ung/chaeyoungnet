@@ -2,6 +2,7 @@
 // Shared chrome (head, nav, theme toggle, command palette, footer) for
 // the publication sub-pages. Keeps them visually consistent with the
 // landing page without duplicating the markup on every page.
+import ContactDock from '../components/ContactDock.astro';
 const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
 ---
 <!DOCTYPE html>
@@ -117,7 +118,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
       .cmdk-empty { padding: 0.9rem; color: var(--muted); font-size: 0.85rem; text-align: center; }
       /* footer */
       .site-foot { border-top: 1px solid rgba(var(--fg-rgb), 0.08); margin-top: 4rem; }
-      .site-foot .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 2rem; padding-bottom: 2.5rem; }
+      .site-foot .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 2rem; padding-bottom: 6rem; }
       .site-foot p { font-size: 0.8rem; color: var(--muted); }
       .site-foot a { color: var(--muted); font-size: 0.8rem; text-decoration: none; }
       .site-foot a:hover { color: var(--fg); }
@@ -176,6 +177,8 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
         <a href="https://github.com/alwaysY0ung" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </div>
     </footer>
+
+    <ContactDock />
 
     <div class="top-right">
       <span class="lang" aria-label="Language">

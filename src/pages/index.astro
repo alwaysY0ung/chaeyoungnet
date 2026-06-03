@@ -887,12 +887,6 @@ const latestPosts = [];
 
       @media (max-width: 900px) { .about-title { font-size: 1.9rem; } .about { padding: 4rem 0; } }
       @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
-      /* footer — same as sub-pages; extra bottom space clears the floating contact dock */
-      .site-foot { border-top: 1px solid rgba(var(--fg-rgb), 0.08); margin-top: 4rem; }
-      .site-foot .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 2rem; padding-bottom: 6.5rem; }
-      .site-foot p { font-size: 0.8rem; color: var(--muted); }
-      .site-foot a { color: var(--muted); font-size: 0.8rem; text-decoration: none; }
-      .site-foot a:hover { color: var(--fg); }
     </style>
   </head>
   <body>
@@ -1025,14 +1019,6 @@ const latestPosts = [];
         )}
       </main>
     </div>
-
-    <footer class="site-foot">
-      <div class="container">
-        <p>© <span id="footYear">2026</span> Chaeyoung Lee · Security &amp; ML · SNSec-Lab</p>
-        <a href="https://github.com/alwaysY0ung" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-      </div>
-    </footer>
-
     <div class="dock-wrap">
       <div class="contact-pop" id="contactPop" role="dialog" aria-label="Contact email" aria-hidden="true">
         <div class="contact-win">
