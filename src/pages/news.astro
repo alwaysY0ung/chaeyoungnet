@@ -1,0 +1,27 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { news } from '../data/news.js';
+---
+<SiteLayout title="News · Chaeyoung Lee" active="">
+  <section class="page-wrap">
+    <h1 class="page-h1 reveal" data-en="News" data-ko="소식">News</h1>
+    <ul class="news-list">
+      {news.map((n) => (
+        <li class="news-item reveal">
+          <span class="news-date">{n.date}</span>
+          <span class="news-text">{n.text}{n.href && (<a class="news-more" href={n.href} data-en="Read on blog →" data-ko="블로그에서 자세히 보기 →">Read on blog →</a>)}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</SiteLayout>
+
+<style>
+  .news-list { list-style: none; margin: 0; padding: 0; max-width: 820px; border-top: 1px solid rgba(var(--fg-rgb), 0.1); }
+  .news-item { display: grid; grid-template-columns: 8rem 1fr; gap: 0.4rem 1.4rem; padding: 1.1rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); }
+  .news-date { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.82rem; color: var(--muted); padding-top: 0.1rem; }
+  .news-text { line-height: 1.7; font-size: 1rem; }
+  .news-more { display: inline-block; margin-left: 0.5rem; font-size: 0.86rem; font-weight: 600; color: var(--link); text-decoration: none; white-space: nowrap; }
+  .news-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 640px) { .news-item { grid-template-columns: 1fr; gap: 0.2rem; } }
+</style>

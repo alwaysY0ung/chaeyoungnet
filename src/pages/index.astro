@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import selfie from '../assets/images/profile/260322_1557_CYL-Photoroom.png';
 import BibList from '../components/BibList.astro';
 import { selectedPublications } from '../data/research.js';
+import { news } from '../data/news.js';
 
 // Social / contact links (single source for the dock bar + contact popover).
 // TODO: scholar / orcid / linkedin 의 url 을 실제 프로필 주소로 채우면
@@ -36,13 +37,8 @@ const researchAreas = [
 // TODO: 본인이 실제로 참여 중인 협업만 추가하세요. (예: { title: '...', with: 'with ...' })
 const collaborations = [];
 // TODO: 본인 소식만 추가하세요.
-// `href` is optional — only news with a related write-up get a "read on blog" link.
-const news = [
-  { date: 'Jun 3, 2026', text: 'Received the IEEE/IFIP DSN 2026 Student Travel Grant to attend the conference in Charlotte, NC.' },
-  { date: 'Jun 3, 2026', text: 'Launched this personal website at chaeyoung.net (built June 1–3).' },
-  { date: 'May 11, 2026', text: 'Registered the chaeyoung.net domain.' },
-  { date: 'Apr 27, 2026', text: 'Our paper “DRIFT: Drift-Resilient Invariant-Feature Transformer for DGA Detection” (Chaeyoung Lee and Chaeri Jung, equal contribution) was accepted to IEEE/IFIP DSN’26.' },
-];
+// News lives in ../data/news.js (shared with /news). Home shows a preview.
+const newsPreview = news.slice(0, 5);
 // TODO: 블로그 글이 생기면 /blog 와 함께 갱신하세요.
 const latestPosts = [];
 // selectedPublications is imported from ../data/research.js (shared with /papers).
@@ -91,7 +87,7 @@ const latestPosts = [];
       }
       html.dark {
         --bg: #1C1C1D; --bg-rgb: 28, 28, 29;
-        --fg: #f1f1f1; --fg-rgb: 241, 241, 241;
+        --fg: #f7f7f7; --fg-rgb: 247, 247, 247;
         --surface: #26262a; --muted: #9a9a9a; --accent-hover: #dcdcdc;
         --photo-bg: #18181c;
         --block: #c9c9c9; --block-fg: #1C1C1D;
@@ -635,9 +631,9 @@ const latestPosts = [];
 
       .terminal-stream {
         position: absolute;
-        left: 50%;
+        left: 58%;
         transform: translateX(-50%);
-        bottom: 42%;
+        bottom: 50%;
         width: min(860px, 88vw);
         font-family: ui-monospace, 'SF Mono', 'Menlo', 'Consolas', monospace;
         font-size: 0.86rem;
@@ -935,7 +931,7 @@ const latestPosts = [];
           <div class="hero-content">
             <span class="badge" data-en="Security × Machine Learning" data-ko="보안 × 머신러닝">Security × Machine Learning</span>
             <h1>Chaeyoung Lee<br /><span>Security &amp; ML researcher</span></h1>
-            <p class="description" data-en="Fourth-year undergraduate in the Division of Artificial Intelligence Engineering (minoring in Big Data) at Sookmyung Women's University (2023–present), and currently an undergraduate researcher at SNSec Lab. I work on data-driven security with machine learning — building robust, explainable systems that detect and explain intrusions, from connected vehicles to evolving network threats." data-ko="숙명여자대학교 인공지능공학부(빅데이터 부전공) 학사 4학년에 재학 중이며(2023–현재), SNSec Lab에서 학부연구생으로 활동하고 있습니다. 머신러닝을 활용한 데이터 기반 보안을 연구하며, 커넥티드 카부터 끊임없이 진화하는 네트워크 위협까지 — 침입을 탐지하고 그 근거까지 설명하는, 견고하고 해석 가능한 시스템을 만듭니다.">
+            <p class="description" data-en="Fourth-year undergraduate in the Division of Artificial Intelligence Engineering (minoring in Big Data) at Sookmyung Women's University (2023–present), and currently an undergraduate researcher at SNSec Lab. I work on data-driven security with machine learning — building robust, explainable systems that detect and explain intrusions, from connected vehicles to evolving network threats." data-ko="숙명여자대학교 인공지능공학부(빅데이터 부전공) 학사 4학년에 재학 중이며(2023–현재), SNSec Lab에서 학부연구생으로 활동하고 있습니다. 머신러닝을 활용한 데이터 기반 보안을 연구하며, 자동차부터 끊임없이 진화하는 네트워크 위협까지 — 침입을 탐지하고 그 근거까지 설명하는, 견고하고 해석 가능한 시스템을 만듭니다.">
               Fourth-year undergraduate in the Division of Artificial Intelligence Engineering (minoring in Big Data) at Sookmyung Women's University (2023–present), and currently an undergraduate researcher at SNSec Lab. I work on data-driven security with machine learning — building robust, explainable systems that detect and explain intrusions, from connected vehicles to evolving network threats.
             </p>
             <div class="buttons">
@@ -989,9 +985,10 @@ const latestPosts = [];
           <section class="home-sec reveal">
             <div class="sec-head">
               <h2 class="sec-title" data-en="News" data-ko="소식">News</h2>
+              <a class="sec-all" href="/news" data-en="see all →" data-ko="전체 보기 →">see all →</a>
             </div>
             <ul class="feed-list">
-              {news.map((n) => (
+              {newsPreview.map((n) => (
                 <li class="feed-item"><span class="feed-date">{n.date}</span><span class="feed-text">{n.text}{n.href && (<a class="feed-more" href={n.href} data-en="Read on blog →" data-ko="블로그에서 자세히 보기 →">Read on blog →</a>)}</span></li>
               ))}
             </ul>
@@ -1206,7 +1203,7 @@ const latestPosts = [];
                 {
                   fontSize: Math.min(78, Math.round(window.innerWidth / 9)),
                   strokeWidth: 1.6,
-                  color: document.documentElement.classList.contains('dark') ? '#f1f1f1' : '#0d0d0d',
+                  color: document.documentElement.classList.contains('dark') ? '#FDFDFD' : '#0d0d0d',
                   duration: 1500,
                   textAlign: 'center',
                 }
