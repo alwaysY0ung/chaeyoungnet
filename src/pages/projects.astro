@@ -6,50 +6,50 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 // Newest first (year + quarter from the JUMP log dates). Only SURF carries a public GitHub link.
 const projects = [
   {
-    year: "2026", q: "Q1", tag: "security · ML", title: "SURF — AI secure-DNS",
+    year: "2026", q: "Q1", tags: ["security", "ML"], title: "SURF — AI secure-DNS",
     href: "https://github.com/ChaeChae-SnSec",
     desc: "Real-time secure-DNS that blocks malicious and DGA domains with an AI model: a hybrid-Transformer detector with TLD-aware multi-task learning, an Unbound-based DNS filter with Redis caching and Prometheus metrics, a Flask reporting server, and a browser extension. Productized from the DRIFT research.",
   },
   {
-    year: "2025", q: "Q3", tag: "dev · automation", title: "Crawler alert bot",
+    year: "2025", q: "Q3", tags: ["dev", "automation"], title: "Crawler alert bot",
     desc: "A web-crawling bot that monitors pages for new or changed content and pushes Slack notifications. Built during Snorose and operated on AWS.",
   },
   {
-    year: "2025", q: "Q2", tag: "AWS · ML", title: "Smart-factory energy forecasting & dashboard",
+    year: "2025", q: "Q2", tags: ["AWS", "ML"], title: "Smart-factory energy forecasting & dashboard",
     award: "🏆 Grand Prize",
     desc: "Team lead (4 members) · Grand Prize (1st place). Forecasts power use, electricity cost, and carbon emissions from hourly factory sensor data, flags anomalies, and visualizes them in a Streamlit web app. Built end-to-end on AWS SageMaker (cloud EDA, anomaly-detection logic, model training, inference, and deployment), with a design that extends to real-time IoT data streams. Part of the AINATION-run AWS certification & data-analytics program (IITP / MSIT; Sookmyung SW-centric university program).",
   },
   {
-    year: "2025", q: "Q1", tag: "infra · devops", title: "Snorose infrastructure",
+    year: "2025", q: "Q1", tags: ["infra", "devops"], title: "Snorose infrastructure",
     desc: "Built and operated the cloud infrastructure for the Snorose organization: servers, databases, and credential and access management.",
   },
   {
-    year: "2024", q: "Q4", tag: "hackathon · backend", title: "ReadIT — DACOS × SOLUX hackathon",
+    year: "2024", q: "Q4", tags: ["hackathon", "backend"], title: "ReadIT — DACOS × SOLUX hackathon",
     award: "🏆 Grand Prize",
     desc: "Grand Prize at the 2024 DACOS & SOLUX joint hackathon. ReadIT summarizes IT news for your target job role: AI article summarization, IT-trend word clouds, personalized recommendations, mind-map scrapbooking with highlights and memos, and daily Naver IT-news crawling. Built the backend (Spring Boot / Java, AWS S3 + RDS MySQL, Docker / Jenkins / EC2).",
   },
   {
-    year: "2024", q: "Q3", tag: "dev · backend", title: "Gift Moment",
+    year: "2024", q: "Q3", tags: ["dev", "backend"], title: "Gift Moment",
     desc: "SOLUX club project (LuckyNode). A birthday gift-funding and letter-archiving platform: wishlist management, letter writing, KakaoPay-based gifting, and account transfers. Built the backend (Node.js / Express, AWS RDS, EC2).",
   },
   {
-    year: "2024", q: "Q3", tag: "SW·HW · web", title: "LineSong",
+    year: "2024", q: "Q3", tags: ["SW·HW", "web"], title: "LineSong",
     desc: "MEIT team project. A SW/HW convergence system that uses a web app with fixed and mobile robots to ease on-campus sharing events and waiting-line order. Built the web/server side (Node.js).",
   },
   {
-    year: "2024", q: "Q1", tag: "AI · accessibility", title: "empAthI · Accesight",
+    year: "2024", q: "Q1", tags: ["AI", "accessibility"], title: "empAthI · Accesight",
     desc: "A web-accessibility service for the visually impaired that augments screen readers by analyzing HTML and page imagery to describe a site's layout, and enables hands-free web control via camera and microphone (gesture and voice).",
   },
   {
-    year: "2024", q: "Q1", tag: "dev · Java", title: "Univ-Study-Manager",
+    year: "2024", q: "Q1", tags: ["dev", "Java"], title: "Univ-Study-Manager",
     desc: "A team-built academic management app: course and assignment databases surface today's classes and upcoming tasks, compute semester GPA with achievement-trend statistics, sync via the Google Calendar API, and use an NLP API for learn-by-explaining.",
   },
   {
-    year: "2024", q: "Q1", tag: "AI · web", title: "InnoVel",
+    year: "2024", q: "Q1", tags: ["AI", "web"], title: "InnoVel",
     desc: "SOLUX 2024 dev project. An AI writing aid for aspiring web-novel authors: choose a genre, theme, or plot and it recommends story plots (OpenAI GPT-3.5) so beginners can create and share novels. Built the backend (Spring Boot / Java, MySQL / RDS).",
   },
   {
-    year: "2024", q: "Q1", tag: "ML · data", title: "E-commerce customer segmentation",
+    year: "2024", q: "Q1", tags: ["ML", "data"], title: "E-commerce customer segmentation",
     desc: "DACON e-commerce customer-segmentation idea competition: RFM and cohort analysis to surface customer-behavior insights.",
   },
 ];
@@ -60,7 +60,7 @@ const projectsCode =
       (p) =>
         '  {\n' +
         '    year: ' + p.year + ',\n' +
-        '    tag: ' + JSON.stringify(p.tag) + ',\n' +
+        '    tags: ' + JSON.stringify(p.tags) + ',\n' +
         '    title: ' + JSON.stringify(p.title) + ',\n' +
         '  },'
     )
@@ -87,7 +87,7 @@ const projectsCode =
     <div class="proj-list">
       {projects.map((p) => (
         <article class="proj-card reveal">
-          <div class="proj-card-top"><span class="proj-year">{p.q ? `${p.q} ` : ''}{p.year}</span><span class="proj-tag">{p.tag}</span>{p.award && <span class="proj-award">{p.award}</span>}</div>
+          <div class="proj-card-top"><span class="proj-year">{p.q ? `${p.q} ` : ''}{p.year}</span>{p.tags.map((t) => <span class="proj-tag">{t}</span>)}{p.award && <span class="proj-award">{p.award}</span>}</div>
           <h3>{p.title}</h3>
           <p>{p.desc}</p>
           {p.href && (
@@ -119,7 +119,7 @@ const projectsCode =
 
   .proj-card { border: 1px solid rgba(var(--fg-rgb), 0.08); border-radius: 16px; padding: 1.6rem; background: var(--surface); transition: transform 0.2s ease, box-shadow 0.2s ease; }
   .proj-card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(var(--fg-rgb), 0.08); }
-  .proj-card-top { display: flex; gap: 0.7rem; align-items: center; margin-bottom: 0.7rem; }
+  .proj-card-top { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.7rem; }
   .proj-year { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.74rem; color: var(--muted); }
   .proj-tag { font-size: 0.7rem; color: var(--muted); border: 1px solid rgba(var(--fg-rgb), 0.14); padding: 0.16rem 0.55rem; border-radius: 100px; }
   .proj-award { font-size: 0.7rem; font-weight: 600; color: var(--fg); background: rgba(var(--fg-rgb), 0.06); border: 1px solid rgba(var(--fg-rgb), 0.16); padding: 0.16rem 0.55rem; border-radius: 100px; }
