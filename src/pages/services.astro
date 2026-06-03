@@ -1,31 +1,43 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 
-// TODO: 실제 활동(리뷰어, 발표, 위원회, 조교 등)으로 교체하세요.
-const services = [
-  { year: '2026', role: '[역할/활동 1]', org: '[기관·학회·행사]' },
-];
+// TODO: 실제 활동(리뷰어, 발표, 위원회, 조교 등)을 추가하세요.
+// 예: { year: '2026', role: 'Reviewer', org: 'IEEE DSN 2026' }
+const services = [];
 ---
 <SiteLayout title="Services · Chaeyoung Lee" active="services">
   <section class="page-wrap">
     <h1 class="page-h1 reveal" data-en="Services" data-ko="활동">Services</h1>
-    <p class="page-lead reveal" data-en="Academic and community service — reviewing, talks, committees, teaching, and more." data-ko="학계·커뮤니티 활동 — 리뷰, 발표, 위원회, 교육 등.">Academic and community service — reviewing, talks, committees, teaching, and more.</p>
-    <ul class="svc-list">
-      {services.map((s) => (
-        <li class="svc-item reveal">
-          <span class="svc-year">{s.year}</span>
-          <span class="svc-body"><strong>{s.role}</strong><span class="svc-org">{s.org}</span></span>
-        </li>
-      ))}
-    </ul>
+    <p class="page-lead reveal" data-en="Academic and community service — reviewing, talks, committees, teaching, and&nbsp;more." data-ko="학계·커뮤니티 활동 — 리뷰, 발표, 위원회, 교육 등.">Academic and community service — reviewing, talks, committees, teaching, and&nbsp;more.</p>
+    {services.length > 0 ? (
+      <ul class="svc-list">
+        {services.map((s) => (
+          <li class="svc-item reveal">
+            <span class="svc-year">{s.year}</span>
+            <span class="svc-body"><strong>{s.role}</strong><span class="svc-org">{s.org}</span></span>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="svc-soon reveal">
+        <span class="svc-soon-badge" data-en="Coming soon" data-ko="준비 중">Coming soon</span>
+        <p data-en="This page is being updated — service activities will be listed here shortly." data-ko="이 페이지는 업데이트 중입니다 — 활동 내역이 곧 추가될 예정입니다.">This page is being updated — service activities will be listed here shortly.</p>
+      </div>
+    )}
   </section>
 </SiteLayout>
 
 <style>
-  .svc-list { list-style: none; margin: 0; padding: 0; max-width: 760px; border-top: 1px solid rgba(var(--fg-rgb), 0.1); }
+  /* Full content width so the divider lines span the page, not a 760px column. */
+  .svc-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(var(--fg-rgb), 0.1); }
   .svc-item { display: flex; gap: 1.5rem; align-items: baseline; padding: 1.1rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.1); }
   .svc-year { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.82rem; color: var(--muted); min-width: 3.5rem; }
   .svc-body { display: flex; flex-direction: column; gap: 0.2rem; }
   .svc-body strong { font-weight: 600; font-size: 1.02rem; }
   .svc-org { color: var(--muted); font-size: 0.9rem; }
+
+  /* Placeholder state shown until real activities are added. */
+  .svc-soon { border-top: 1px solid rgba(var(--fg-rgb), 0.1); padding: 2.2rem 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+  .svc-soon-badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--link); border: 1px solid var(--link); border-radius: 999px; padding: 0.25rem 0.7rem; }
+  .svc-soon p { color: var(--muted); font-size: 0.98rem; line-height: 1.7; max-width: 560px; }
 </style>
