@@ -36,7 +36,9 @@ const researchAreas = [
 // TODO: 본인이 실제로 참여 중인 협업만 추가하세요. (예: { title: '...', with: 'with ...' })
 const collaborations = [];
 // TODO: 본인 소식만 추가하세요.
+// `href` is optional — only news with a related write-up get a "read on blog" link.
 const news = [
+  { date: 'Jun 3, 2026', text: 'Received the IEEE/IFIP DSN 2026 Student Travel Grant to attend the conference in Charlotte, NC.' },
   { date: 'Jun 3, 2026', text: 'Launched this personal website at chaeyoung.net (built June 1–3).' },
   { date: 'May 11, 2026', text: 'Registered the chaeyoung.net domain.' },
   { date: 'Apr 27, 2026', text: 'Our paper “DRIFT: Drift-Resilient Invariant-Feature Transformer for DGA Detection” (Chaeyoung Lee and Chaeri Jung, equal contribution) was accepted to IEEE/IFIP DSN’26.' },
@@ -856,6 +858,8 @@ const latestPosts = [];
       .feed-item:last-child { border-bottom: none; }
       .feed-date { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.8rem; color: var(--muted); padding-top: 0.1rem; }
       .feed-text { line-height: 1.6; font-size: 0.96rem; }
+      .feed-more { display: inline-block; margin-left: 0.5rem; font-size: 0.84rem; font-weight: 600; color: var(--link); text-decoration: none; white-space: nowrap; }
+      .feed-more:hover { text-decoration: underline; text-underline-offset: 3px; }
       @media (max-width: 640px) { .feed-item { grid-template-columns: 1fr; gap: 0.2rem; } }
       .pub-sel-list { list-style: none; margin: 0; padding: 0; }
       .pub-sel { padding: 1.1rem 0; border-bottom: 1px solid rgba(var(--fg-rgb), 0.08); }
@@ -988,7 +992,7 @@ const latestPosts = [];
             </div>
             <ul class="feed-list">
               {news.map((n) => (
-                <li class="feed-item"><span class="feed-date">{n.date}</span><span class="feed-text">{n.text}</span></li>
+                <li class="feed-item"><span class="feed-date">{n.date}</span><span class="feed-text">{n.text}{n.href && (<a class="feed-more" href={n.href} data-en="Read on blog →" data-ko="블로그에서 자세히 보기 →">Read on blog →</a>)}</span></li>
               ))}
             </ul>
           </section>
