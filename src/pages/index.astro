@@ -37,6 +37,8 @@ const researchAreas = [
 const collaborations = [];
 // TODO: 본인 소식만 추가하세요.
 const news = [
+  { date: 'Jun 3, 2026', text: 'Launched this personal website at chaeyoung.net (built June 1–3).' },
+  { date: 'May 11, 2026', text: 'Registered the chaeyoung.net domain.' },
   { date: 'Apr 27, 2026', text: 'Our paper “DRIFT: Drift-Resilient Invariant-Feature Transformer for DGA Detection” (Chaeyoung Lee and Chaeri Jung, equal contribution) was accepted to IEEE/IFIP DSN’26.' },
 ];
 // TODO: 블로그 글이 생기면 /blog 와 함께 갱신하세요.
@@ -184,7 +186,7 @@ const latestPosts = [];
       }
 
       .logo-icon::before {
-        content: 'ChaeyoungLee';
+        content: 'Chaeyoung Lee';
         color: var(--bg);
         font-weight: 700;
         font-size: 0.82rem;
@@ -297,6 +299,7 @@ const latestPosts = [];
         align-items: center;
         gap: 0.3rem;
         line-height: 1;
+        margin-left: 0.75rem; /* wider gap than between nav items, like the logo group */
         transition: background 0.2s ease, color 0.2s ease;
       }
       .nav-k:hover { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
@@ -348,7 +351,7 @@ const latestPosts = [];
           min-width: 0;
         }
         .nav-links > a { width: 100%; }
-        .nav-k { width: 100%; justify-content: flex-start; margin-top: 0.2rem; }
+        .nav-k { width: 100%; justify-content: flex-start; margin-top: 0.2rem; margin-left: 0; }
       }
 
       .language-selector {
@@ -884,6 +887,12 @@ const latestPosts = [];
 
       @media (max-width: 900px) { .about-title { font-size: 1.9rem; } .about { padding: 4rem 0; } }
       @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+      /* footer — same as sub-pages; extra bottom space clears the floating contact dock */
+      .site-foot { border-top: 1px solid rgba(var(--fg-rgb), 0.08); margin-top: 4rem; }
+      .site-foot .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 2rem; padding-bottom: 6.5rem; }
+      .site-foot p { font-size: 0.8rem; color: var(--muted); }
+      .site-foot a { color: var(--muted); font-size: 0.8rem; text-decoration: none; }
+      .site-foot a:hover { color: var(--fg); }
     </style>
   </head>
   <body>
@@ -1016,6 +1025,14 @@ const latestPosts = [];
         )}
       </main>
     </div>
+
+    <footer class="site-foot">
+      <div class="container">
+        <p>© <span id="footYear">2026</span> Chaeyoung Lee · Security &amp; ML · SNSec-Lab</p>
+        <a href="https://github.com/alwaysY0ung" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+    </footer>
+
     <div class="dock-wrap">
       <div class="contact-pop" id="contactPop" role="dialog" aria-label="Contact email" aria-hidden="true">
         <div class="contact-win">

@@ -39,8 +39,11 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
       nav { display: flex; justify-content: center; align-items: center; }
       .nav-container { position: relative; display: inline-flex; align-items: center; gap: 1.25rem; background: rgba(var(--bg-rgb), 0.8); backdrop-filter: blur(10px); padding: 0.6rem 1.5rem; border-radius: 50px; border: 1px solid rgba(var(--fg-rgb), 0.14); }
       .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; }
-      .logo-icon { height: 26px; padding: 0 0.5rem; background: var(--block); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
-      .logo-icon::before { content: 'ChaeyoungLee'; color: var(--bg); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.02em; }
+      /* Outlined (not filled black) on sub-pages — home isn't the current page here.
+         Matches the .nav-k "ctrl k" outline: transparent bg + same border color. */
+      .logo-icon { height: 26px; padding: 0 0.5rem; background: transparent; border: 1px solid rgba(var(--fg-rgb), 0.18); border-radius: 7px; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
+      .logo:hover .logo-icon { background: rgba(var(--fg-rgb), 0.06); }
+      .logo-icon::before { content: 'Chaeyoung Lee'; color: var(--fg); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.02em; }
       .nav-links { display: flex; gap: 0.5rem; align-items: center; }
       .nav-links a { text-decoration: none; color: var(--fg); font-size: 0.82rem; font-weight: 500; opacity: 0.82; padding: 0.38rem 0.6rem; border-radius: 8px; transition: all 0.2s ease; white-space: nowrap; display: inline-flex; align-items: center; line-height: 1; }
       .nav-links a:hover { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
@@ -57,7 +60,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
       .nav-group-menu a { display: block; padding: 0.5rem 0.8rem; border-radius: 6px; font-size: 0.82rem; opacity: 0.9; }
       .nav-group-menu a:hover { background: var(--surface); opacity: 1; }
       .nav-group-menu a.active { background: var(--block); color: var(--bg); opacity: 1; }
-      .nav-k { background: transparent; border: 1px solid rgba(var(--fg-rgb), 0.18); color: var(--fg); opacity: 0.82; font-family: inherit; font-size: 0.7rem; letter-spacing: 0.02em; padding: 0.28rem 0.5rem; border-radius: 6px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; line-height: 1; transition: background 0.2s ease, opacity 0.2s ease; }
+      .nav-k { background: transparent; border: 1px solid rgba(var(--fg-rgb), 0.18); color: var(--fg); opacity: 0.82; font-family: inherit; font-size: 0.7rem; letter-spacing: 0.02em; padding: 0.28rem 0.5rem; border-radius: 6px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem; line-height: 1; margin-left: 0.75rem; transition: background 0.2s ease, opacity 0.2s ease; }
       .nav-k:hover { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
       .nav-k-ico { font-size: 0.72rem; opacity: 0.75; }
       .nav-burger { display: none; background: transparent; border: none; cursor: pointer; color: var(--fg); padding: 0.3rem; border-radius: 8px; align-items: center; justify-content: center; }
@@ -80,7 +83,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
         .nav-group.open .nav-group-menu { display: block; }
         .nav-group.open .nav-group-btn { background: rgba(var(--fg-rgb), 0.10); opacity: 1; }
         .nav-links > a { width: 100%; }
-        .nav-k { width: 100%; justify-content: flex-start; margin-top: 0.2rem; }
+        .nav-k { width: 100%; justify-content: flex-start; margin-top: 0.2rem; margin-left: 0; }
       }
       .top-right { position: fixed; top: 1.6rem; right: 2.5rem; z-index: 70; display: inline-flex; align-items: center; gap: 0.9rem; }
       .theme-toggle { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid transparent; background: var(--fg); color: var(--bg); cursor: pointer; box-shadow: 0 6px 20px rgba(var(--fg-rgb), 0.18); transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease; }
@@ -100,7 +103,7 @@ const { title = 'Chaeyoung Lee', active = '' } = Astro.props;
       /* simple content pages (services / blog / dashboard) */
       .page-wrap { padding: 1.5rem 0 4rem; }
       .page-h1 { font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 1.2rem; }
-      .page-lead { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 640px; margin-bottom: 2.5rem; }
+      .page-lead { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 640px; margin-bottom: 2.5rem; text-wrap: balance; }
       .page-note { color: var(--muted); font-size: 0.95rem; line-height: 1.8; }
       /* command palette */
       .cmdk { position: fixed; inset: 0; z-index: 200; display: none; align-items: flex-start; justify-content: center; background: rgba(0, 0, 0, 0.45); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); padding-top: 15vh; }
