@@ -9,7 +9,9 @@ import { news } from '../data/news.js';
       {news.map((n) => (
         <li class="news-item reveal">
           <span class="news-date">{n.date}</span>
-          <span class="news-text">{n.text}{n.href && (<a class="news-more" href={n.href} data-en="Read on blog →" data-ko="블로그에서 자세히 보기 →">Read on blog →</a>)}</span>
+          <span class="news-text">
+            <span set:html={n.text} />
+            {n.href && (<a class="news-more" href={n.href} data-en="Read on blog →" data-ko="블로그에서 자세히 보기 →">Read on blog →</a>)}</span>
         </li>
       ))}
     </ul>
